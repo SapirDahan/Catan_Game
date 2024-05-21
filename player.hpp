@@ -8,6 +8,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <iostream>
 #include "board.hpp"
 
 
@@ -16,22 +17,23 @@ using namespace std;
 namespace ariel {
     class Player {
     private:
-        int wool = 0;
-        int brick = 0;
-        int wood = 0;
-        int oat = 0;
-        int iron = 0;
+        vector<string> resources = {"wool", "brick", "wood", "oat", "iron"};
+        vector<unsigned int> resourcesValues = {0, 0, 0, 0, 0};
 
         int points = 0;
 
+        string name;
+
     public:
         Player(string name);
-        void placeSettelemnt(vector<string> places, vector<int> placesNum, Board b);
+        string getName() const { return name;}
+        int getPoints() const { return points;}
+        void placeSettlement(vector<string> places, vector<int> placesNum, Board b);
         void placeRoad(vector<string> places, vector<int> placesNum, Board b);
         void rollDice();
         void endTurn();
-        void trade(Player p, string give, string get, int giveAmount, int getAmount);
+        void trade(Player p, string give, string get, unsigned int giveAmount, unsigned int getAmount);
         void buyDevelopmentCard();
-        void printPoints();
+        void printPoints() const;
     };
 }

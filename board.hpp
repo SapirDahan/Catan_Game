@@ -14,8 +14,8 @@ using namespace std;
 namespace ariel {
     class Board {
     private:
-        Board(string name);
+
     public:
-        Board getBoard();
+        Board();
     };
 }

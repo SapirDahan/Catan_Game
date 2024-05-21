@@ -14,9 +14,15 @@ namespace ariel {
     class Catan {
     private:
         Player turn;
+        Board board;
+        Player player1;
+        Player player2;
+        Player player3;
+
     public:
         Catan(Player p1, Player p2, Player p3);
-        void ChooseStartingPlayer();
-        void printWinner();
+        void ChooseStartingPlayer() const;
+        void printWinner() const;
+        Board getBoard() const;
     };
 }

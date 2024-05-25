@@ -19,6 +19,9 @@ run: demo
 demo: Demo.o board.o catan.o ResourceCard.o player.o Hexagon.o Intersection.o Path.o Dice.o Card.o DevelopmentCard.o SpecialCard.o
 	$(CXX) $(CXXFLAGS) $^ -o demo
 
+catan: Game.o board.o catan.o ResourceCard.o player.o Hexagon.o Intersection.o Path.o Dice.o Card.o DevelopmentCard.o SpecialCard.o
+	$(CXX) $(CXXFLAGS) $^ -o catan
+
 test: TestCounter.o Tests.o $(OBJECTS)
 	$(CXX) $(CXXFLAGS) $^ -o test
 

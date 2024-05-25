@@ -35,5 +35,7 @@ namespace ariel {
         void ChooseStartingPlayer() const;
         void printWinner() const;
         Board getBoard() const;
+        Player checkTurn() const{ return turn; }
+        Player nextPlayer();
     };
 }

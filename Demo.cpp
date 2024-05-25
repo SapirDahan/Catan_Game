@@ -3,11 +3,9 @@
  *
  */
 #include <iostream>
-#include <stdexcept>
 #include <vector>
 #include "catan.hpp"
-#include "player.hpp"
-#include "board.hpp"
+
 using namespace std;
 using namespace ariel;
 

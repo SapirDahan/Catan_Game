@@ -69,4 +69,20 @@ namespace ariel {
     Board Catan::getBoard() const{
         return board;
     }
+
+    Player Catan::nextPlayer(){
+        if(turn.getName() == player1.getName()){
+            turn = player2;
+            return player2;
+        }
+
+        else if(turn.getName() == player2.getName()){
+            turn = player3;
+            return player3;
+        }
+        else{
+            turn = player1;
+            return player1;
+        }
+    }
 }

@@ -166,4 +166,14 @@ namespace ariel {
                                                                   {51, 52},
                                                                   {52, 53}};
     };
+
+    const std::vector<Hexagon::Type> HexagonTypes = {
+            Hexagon::Ore, Hexagon::Sheep, Hexagon::Wood, Hexagon::Wheat, Hexagon::Brick,
+            Hexagon::Sheep, Hexagon::Brick, Hexagon::Wheat, Hexagon::Wood, Hexagon::Desert,
+            Hexagon::Wood, Hexagon::Ore, Hexagon::Wood, Hexagon::Ore, Hexagon::Wheat,
+            Hexagon::Sheep, Hexagon::Brick, Hexagon::Wheat, Hexagon::Sheep
+    };
+
+    const std::vector<unsigned int> HexagonNumbers = {
+            10, 2, 9, 12, 6, 4, 10, 9, 11, 100, 3, 8, 8, 3, 4, 5, 5, 6, 11};
 }

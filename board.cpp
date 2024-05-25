@@ -7,9 +7,11 @@ using namespace std;
 Board::Board() {
     // Generate hexagonal grid with 5 rows
     unsigned int rowLengths[5] = {3, 4, 5, 4, 3};
+    unsigned int index = 0;
     for (unsigned int x = 0; x < 5; ++x) {
         for (unsigned int y = 0; y < rowLengths[x]; ++y) {
-            hexagons.emplace_back(Hexagon(Hexagon::Desert, 0, x, y));
+            hexagons.emplace_back(Hexagon(HexagonTypes[index], HexagonNumbers[index], x, y));
+            index++;
         }
     }
 

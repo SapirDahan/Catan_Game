@@ -2,7 +2,6 @@
 
 #include "Card.hpp"
 
-#include "Card.hpp"
 
 namespace ariel {
 

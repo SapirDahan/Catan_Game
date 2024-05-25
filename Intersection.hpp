@@ -19,7 +19,7 @@ namespace ariel {
 
         Player *getOwner() const;
 
-        void setStructure(Structure structure, Player *owner);
+        bool setStructure(Structure structure, Player *owner);
 
         void addAdjacentHexagon(unsigned int hexagonX, unsigned int hexagonY);
 

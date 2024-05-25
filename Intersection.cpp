@@ -14,3 +14,19 @@ void Intersection::addAdjacentHexagon(unsigned int hexagonX, unsigned int hexago
 const std::vector<std::pair<unsigned int, unsigned int>>& Intersection::getAdjacentHexagons() const {
     return adjacentHexagons;
 }
+
+bool Intersection::setStructure(Structure newStructure, Player *player) {
+    if (newStructure == Settlement) {
+        if (structure == None) {
+            structure = Settlement;
+            this->owner = player;
+            return true;
+        }
+    } else if (newStructure == City) {
+        if (structure == Settlement && this->owner == player) {
+            structure = City;
+            return true;
+        }
+    }
+    return false;
+}

@@ -22,16 +22,8 @@ namespace ariel {
             return false; // Path is already owned by another player
         }
 
-//        // Check if player has the required resources
-//        if (player->hasResourceCards(ResourceCard::Brick, 1) && player->hasResourceCards(ResourceCard::Lumber, 1)) {
-//            // Remove the required resources from the player
-//            player->removeResourceCard(ResourceCard::Brick);
-//            player->removeResourceCard(ResourceCard::Lumber);
-//            owner = player;
-//            return true;
-//        }
-
-        return false; // Player does not have the required resources
+        owner = player;
+        return true;
     }
 
 }

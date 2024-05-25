@@ -3,7 +3,6 @@
 #include <string>
 #include <vector>
 #include <memory>
-//#include "ResourceCard.hpp"
 
 namespace ariel {
 

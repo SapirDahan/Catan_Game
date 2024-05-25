@@ -6,21 +6,28 @@
 
 #pragma once
 
-class Hexagon {
-public:
-    enum Type { Wood, Brick, Sheep, Wheat, Ore, Desert };
+namespace ariel {
 
-    Hexagon(Type type = Desert, int number = 0, int x = 0, int y = 0);
+    class Hexagon {
+    public:
+        enum Type {
+            Wood, Brick, Sheep, Wheat, Ore, Desert
+        };
 
-    Type getType() const;
-    int getNumber() const;
-    int getX() const;
-    int getY() const;
+        Hexagon(Type type = Desert, unsigned int number = 0, unsigned int x = 0, unsigned int y = 0);
 
-private:
-    Type type;
-    int number;
-    int x;
-    int y;
-};
+        Type getType() const;
 
+        unsigned int getNumber() const;
+
+        unsigned int getX() const;
+
+        unsigned int getY() const;
+
+    private:
+        Type type;
+        unsigned int number;
+        unsigned int x;
+        unsigned int y;
+    };
+}

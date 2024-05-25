@@ -1,26 +1,34 @@
-#pragma
+#pragma once
 #include "player.hpp"
 #include <vector>
 #include <utility>
 
-using namespace ariel;
+namespace ariel {
 
-class Intersection {
-public:
-    enum Structure { None, Settlement, City };
+    class Intersection {
+    public:
+        enum Structure {
+            None, Settlement, City
+        };
 
-    Intersection(int index);
+        Intersection(unsigned int index);
 
-    int getIndex() const;
-    Structure getStructure() const;
-    Player* getOwner() const;
-    void setStructure(Structure structure, Player* owner);
-    void addAdjacentHexagon(int hexagonX, int hexagonY);
-    const std::vector<std::pair<int, int>>& getAdjacentHexagons() const;
+        unsigned int getIndex() const;
 
-private:
-    int index;
-    Structure structure;
-    Player* owner;
-    std::vector<std::pair<int, int>> adjacentHexagons;
-};
+        Structure getStructure() const;
+
+        Player *getOwner() const;
+
+        void setStructure(Structure structure, Player *owner);
+
+        void addAdjacentHexagon(unsigned int hexagonX, unsigned int hexagonY);
+
+        const std::vector<std::pair<unsigned int, unsigned int>> &getAdjacentHexagons() const;
+
+    private:
+        unsigned int index;
+        Structure structure;
+        Player *owner;
+        std::vector<std::pair<unsigned int, unsigned int>> adjacentHexagons;
+    };
+}

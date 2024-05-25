@@ -1,21 +1,24 @@
-#pragma
+#pragma once
 
-#include "player.hpp"
 #include <utility>
+#include "player.hpp"
 
-using namespace ariel;
+namespace ariel {
 
-class Path {
-public:
-    Path(int index, int intersection1, int intersection2);
+    class Path {
+    public:
+        Path(unsigned int index, unsigned int intersection1, unsigned int intersection2);
 
-    int getIndex() const;
-    Player* getOwner() const;
-    void setOwner(Player* owner);
-    std::pair<int, int> getIntersections() const;
+        unsigned int getIndex() const;
+        std::pair<unsigned int, unsigned int> getIntersections() const;
+        Player* getOwner() const;
+        bool setOwner(Player* player);
 
-private:
-    int index;
-    Player* owner;
-    std::pair<int, int> intersections;
-};
+    private:
+        unsigned int index;
+        unsigned int intersection1;
+        unsigned int intersection2;
+        Player* owner; // Pointer to the owner of the path
+    };
+
+}

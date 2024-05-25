@@ -6,7 +6,17 @@
 
 
 #pragma once
+
+#include <iostream>
+#include <vector>
+#include <memory>
+#include "ResourceCard.hpp"
+#include "DevelopmentCard.hpp"
+#include "SpecialCard.hpp"
 #include "player.hpp"
+#include "Path.hpp"
+#include "board.hpp"
+#include "Dice.hpp"
 
 using namespace std;
 
@@ -18,6 +28,7 @@ namespace ariel {
         Player player1;
         Player player2;
         Player player3;
+        std::vector<std::shared_ptr<Card>> cards;
 
     public:
         Catan(Player p1, Player p2, Player p3);

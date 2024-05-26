@@ -93,7 +93,7 @@ namespace ariel {
     }
 
     void Catan::handFirstCards() {
-        std::vector<std::shared_ptr<Player>> players = { std::make_shared<Player>(player1), std::make_shared<Player>(player2), std::make_shared<Player>(player3) };
+        Player players[] = {player1, player2, player3};
 
         for (const auto& player : players) {
             for (unsigned int i = 0; i < 4; ++i) {
@@ -105,31 +105,31 @@ namespace ariel {
                 takeCard(player, CardType::Grain);
             }
 
-            std::cout << player->getName() << " has received the initial resource cards: 4 Lumber, 4 Bricks, 2 Wool, and 2 Grain." << std::endl;
-            std::cout << player->getName() << " should now build two roads and two settlements using these cards." << std::endl;
+            std::cout << player.getName() << " has received the initial resource cards: 4 Lumber, 4 Bricks, 2 Wool, and 2 Grain." << std::endl;
+            std::cout << player.getName() << " should now build two roads and two settlements using these cards." << std::endl;
         }
     }
 
-    bool Catan::takeCard(std::shared_ptr<Player> player, CardType type) {
+    bool Catan::takeCard(Player player, CardType type) {
         std::shared_ptr<Card> card = findAvailableCard(type);
         if (card) {
-            cardOwnership[card] = player;
+            cardOwnership[card] = &player;
             return true;
         }
         std::cout << "No available card of type " << static_cast<int>(type) << " to take." << std::endl;
         return false;
     }
 
-    bool Catan::returnCard(std::shared_ptr<Player> player, CardType type) {
+    bool Catan::returnCard(Player player, CardType type) {
         for (const auto& entry : cardOwnership) {
             std::shared_ptr<Card> card = entry.first;
-            std::shared_ptr<Player> owner = entry.second;
-            if (card->getType() == type && owner == player) {
+            Player* owner = entry.second;
+            if (card->getType() == type && owner->getName() == player.getName()) {
                 cardOwnership.erase(card);
                 return true;
             }
         }
-        std::cout << "No card of type " << static_cast<int>(type) << " owned by " << player->getName() << " to return." << std::endl;
+        std::cout << "No card of type " << static_cast<int>(type) << " owned by " << player.getName() << " to return." << std::endl;
         return false;
     }
 
@@ -142,10 +142,11 @@ namespace ariel {
         return nullptr;
     }
 
-    bool Catan::playerHasCards(std::shared_ptr<Player> player, CardType type, unsigned int amount) const {
+    bool Catan::playerHasCards(Player player, CardType type, unsigned int amount) const {
         unsigned int count = 0;
         for (const auto& entry : cardOwnership) {
-            if (entry.second == player && entry.first->getType() == type) {
+
+            if (entry.second->getName() == player.getName() && entry.first->getType() == type) {
                 count++;
                 if (count >= amount) {
                     return true;
@@ -155,7 +156,7 @@ namespace ariel {
         return false;
     }
 
-    bool Catan::placeRoad(std::shared_ptr<Player>  player, unsigned int pathIndex) {
+    bool Catan::placeRoad(Player  player, unsigned int pathIndex) {
         if(pathIndex >= board.getPathAdjacenciesSize()){
             std::cout << "Index out of bound." << std::endl;
             return  false;
@@ -171,7 +172,7 @@ namespace ariel {
         }
         returnCard(player, CardType::Lumber);
         returnCard(player, CardType::Brick);
-        path.setOwner(player.get());
+        path.setOwner(&player);
         std::cout << "Your road has been placed." << std::endl;
 
         return true;

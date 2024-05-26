@@ -32,7 +32,7 @@ namespace ariel {
         Player player3;
         std::vector<std::shared_ptr<Card>> cards;
         Dice dice;
-        std::unordered_map<std::shared_ptr<Card>, std::shared_ptr<Player>> cardOwnership;
+        std::unordered_map<std::shared_ptr<Card>, Player*> cardOwnership;
 
         std::shared_ptr<Card> findAvailableCard(CardType type);
 
@@ -46,12 +46,12 @@ namespace ariel {
         Player nextPlayer();
         unsigned int rollDices();
         void handFirstCards();
-        bool takeCard(std::shared_ptr<Player> player, CardType type);
-        bool returnCard(std::shared_ptr<Player> player, CardType type);
-        bool playerHasCards(std::shared_ptr<Player> player, CardType type, unsigned int amount) const;
+        bool takeCard(Player player, CardType type);
+        bool returnCard(Player player, CardType type);
+        bool playerHasCards(Player player, CardType type, unsigned int amount) const;
 
-        bool placeSettlement(std::shared_ptr<Player> player, unsigned int intersectionIndex);
-        bool placeRoad(std::shared_ptr<Player> player, unsigned int pathIndex);
+        bool placeSettlement(Player player, unsigned int intersectionIndex);
+        bool placeRoad(Player player, unsigned int pathIndex);
 
     };
 }

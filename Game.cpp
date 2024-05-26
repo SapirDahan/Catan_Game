@@ -86,8 +86,9 @@ namespace ariel {
                 while(!buildSuccess){
                     std::cout << "Enter path index to place road: ";
                     std::cin >> index;
-                    std::shared_ptr<Player> playerPtr = std::make_shared<Player>(catanGame->checkTurn());
-                    buildSuccess = catanGame->placeRoad(playerPtr, index);
+//                    std::shared_ptr<Player> playerPtr = std::make_shared<Player>(catanGame->checkTurn());
+//                    buildSuccess = catanGame->placeRoad(playerPtr, index);
+                    buildSuccess = catanGame->placeRoad(catanGame->checkTurn(), index);
                 }
                 break;
 

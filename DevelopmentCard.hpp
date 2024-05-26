@@ -1,40 +1,42 @@
 #pragma once
 
 #include "Card.hpp"
+#include "CardType.hpp"
 
 namespace ariel {
 
     class DevelopmentCard : public Card {
     public:
+        DevelopmentCard(CardType type);
+        CardType getType() const override;
+
+    private:
+        CardType type;
     };
 
     class KnightCard : public DevelopmentCard {
     public:
-        const char* getType() const override { return "Knight"; }
+        KnightCard();
     };
 
     class VictoryPointCard : public DevelopmentCard {
     public:
-        const char* getType() const override { return "VictoryPoint"; }
+        VictoryPointCard();
     };
 
-    class ProgressCard : public DevelopmentCard {
+    class RoadBuildingCard : public DevelopmentCard {
     public:
+        RoadBuildingCard();
     };
 
-    class YearOfPlentyCard : public ProgressCard {
+    class YearOfPlentyCard : public DevelopmentCard {
     public:
-        const char* getType() const override { return "YearOfPlenty"; }
+        YearOfPlentyCard();
     };
 
-    class MonopolyCard : public ProgressCard {
+    class MonopolyCard : public DevelopmentCard {
     public:
-        const char* getType() const override { return "Monopoly"; }
-    };
-
-    class RoadBuildingCard : public ProgressCard {
-    public:
-        const char* getType() const override { return "RoadBuilding"; }
+        MonopolyCard();
     };
 
 }

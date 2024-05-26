@@ -2,17 +2,12 @@
 
 namespace ariel {
 
-    SpecialCard::SpecialCard(SpecialType type) : type(type) {}
+    SpecialCard::SpecialCard(CardType type) : type(type) {}
 
-    const char* SpecialCard::getType() const {
-        switch (type) {
-            case LargestArmy: return "LargestArmy";
-            default: return "Unknown";
-        }
-    }
-
-    SpecialCard::SpecialType SpecialCard::getSpecialType() const {
+    CardType SpecialCard::getType() const {
         return type;
     }
+
+    LargestArmyCard::LargestArmyCard() : SpecialCard(CardType::LargestArmy) {}
 
 }

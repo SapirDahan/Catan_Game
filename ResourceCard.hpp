@@ -1,20 +1,19 @@
 # pragma once
 
 #include "Card.hpp"
+#include "CardType.hpp"
 
 
 namespace ariel {
 
     class ResourceCard : public Card {
     public:
-        enum ResourceType { Lumber, Brick, Wool, Grain, Ore };
 
-        ResourceCard(ResourceType type);
-        const char* getType() const override;
-        ResourceType getResourceType() const;
+        ResourceCard(CardType type);
+        CardType getType() const;
 
     private:
-        ResourceType type;
+        CardType type;
     };
 
 }

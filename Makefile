@@ -41,4 +41,4 @@ valgrind: demo test
 	$(CXX) $(CXXFLAGS) --compile $< -o $@
 
 clean:
-	rm -f *.o demo test
+	rm -f *.o demo test catan

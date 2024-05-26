@@ -23,8 +23,6 @@ namespace ariel {
         void welcomeAndSetupPlayers();
         void nextPlayer();
 
-        void placeSettlement(unsigned int intersectionIndex);
-        void placeRoad(unsigned int pathIndex);
         void buildMenu();
     };
 

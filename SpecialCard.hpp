@@ -1,19 +1,22 @@
-# pragma once
+#pragma once
 
 #include "Card.hpp"
+#include "CardType.hpp"
 
 namespace ariel {
 
     class SpecialCard : public Card {
     public:
-        enum SpecialType { LargestArmy };
-
-        SpecialCard(SpecialType type);
-        const char* getType() const override;
-        SpecialType getSpecialType() const;
+        SpecialCard(CardType type);
+        CardType getType() const override;
 
     private:
-        SpecialType type;
+        CardType type;
+    };
+
+    class LargestArmyCard : public SpecialCard {
+    public:
+        LargestArmyCard();
     };
 
 }

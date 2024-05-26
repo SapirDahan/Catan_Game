@@ -1,6 +1,7 @@
 # pragma once
 
 #include "player.hpp"
+#include "CardType.hpp"
 #include <memory>
 
 namespace ariel {
@@ -8,7 +9,7 @@ namespace ariel {
     class Card {
     public:
         virtual ~Card() = default; // Virtual destructor for polymorphic cleanup
-        virtual const char* getType() const = 0; // Pure virtual function
+        virtual CardType getType() const = 0;
         void setHolder(Player* holder);
         Player* getHolder() const;
 

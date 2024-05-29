@@ -28,7 +28,7 @@ namespace ariel {
 
         while (true) {
             std::cout << std::endl;
-            std::cout << players[currentPlayerIndex]->getName() << ", it's your turn." << std::endl;
+            std::cout << catanGame->checkTurn().getName() << ", it's your turn." << std::endl;
             std::cout << "Choose action: " << std::endl;
             std::cout << "1. Roll Dice" << std::endl;
             std::cout << "2. Build" << std::endl;
@@ -36,6 +36,7 @@ namespace ariel {
             std::cout << "4. Buy Development Card" << std::endl;
             std::cout << "5. Play Development Card" << std::endl;
             std::cout << "6. End Turn" << std::endl;
+            std::cout << "7. End the Game" << std::endl;
 
             int choice;
             std::cin >> choice;
@@ -69,11 +70,20 @@ namespace ariel {
                     std::cout << "Playing development card... (not implemented yet)" << std::endl;
                     break;
                 case 6:
-                    nextPlayer();
+                    catanGame->nextPlayer();
                     numOfRollingTheDice = 0;
+                    break;
+                case 7:
+                    // check i someone won
+                    cout << "Existing the game" << endl;
                     break;
                 default:
                     std::cout << "Invalid choice. Please try again." << std::endl;
+
+            }
+
+            if(choice == 7){
+                break;
             }
         }
     }
@@ -87,29 +97,24 @@ namespace ariel {
         std::cin >> buildChoice;
 
         unsigned int index;
-        bool buildSuccess;
         switch (buildChoice) {
 
             case 1:
-                buildSuccess = false;
-                while(!buildSuccess){
-                    std::cout << "Enter path index to place road: ";
-                    std::cin >> index;
-//                    std::shared_ptr<Player> playerPtr = std::make_shared<Player>(catanGame->checkTurn());
-//                    buildSuccess = catanGame->placeRoad(playerPtr, index);
-                    buildSuccess = catanGame->placeRoad(catanGame->checkTurn(), index);
-                }
+                std::cout << "Enter path index to place road: ";
+                std::cin >> index;
+                catanGame->placeRoad(catanGame->checkTurn(), index);
+
                 break;
 
             case 2:
                 std::cout << "Enter intersection index to place settlement: ";
                 std::cin >> index;
-                //catanGame->placeSettlement(index);
+                catanGame->placeSettlement(catanGame->checkTurn(),index);
                 break;
             case 3:
                 std::cout << "Enter intersection index to place city: ";
                 std::cin >> index;
-                //catanGame->placeSettlement(index);
+                //catanGame->placeCity(index);
 
             default:
                 std::cout << "Invalid build choice. Please try again." << std::endl;
@@ -132,9 +137,9 @@ namespace ariel {
 //        }
     }
 
-    void Game::nextPlayer() {
-        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
-    }
+//    void Game::nextPlayer() {
+//        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+//    }
 
 
 

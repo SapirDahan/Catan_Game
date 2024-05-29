@@ -174,6 +174,29 @@ namespace ariel {
             std::cout << "Index out of bound." << std::endl;
             return  false;
         }
+        if (board.getPath(pathIndex).getOwner() != nullptr) {
+            std::cout << "This path is already owned by another player." << std::endl;
+            return false;
+        }
+        if (!playerHasCards(player, CardType::Lumber, 1) || !playerHasCards(player, CardType::Brick, 1)) {
+            std::cout << "The player does not have the required resources (1 Lumber and 1 Brick) to build a road." << std::endl;
+            return false;
+        }
+
+        returnCard(player, CardType::Lumber);
+        returnCard(player, CardType::Brick);
+        board.getPath(pathIndex).setOwner(&player);
+        std::cout << "Your road has been placed." << std::endl;
+
+        return true;
+
+    }
+
+    bool Catan::placeSettlement(Player  player, unsigned int pathIndex) {
+        if(pathIndex >= board.getIntersectionAdjacenciesSize()){
+            std::cout << "Index out of bound." << std::endl;
+            return  false;
+        }
         Path path = board.getPath(pathIndex);
         if (path.getOwner() != nullptr) {
             std::cout << "This path is already owned by another player." << std::endl;
@@ -183,10 +206,6 @@ namespace ariel {
             std::cout << "The player does not have the required resources (1 Lumber and 1 Brick) to build a road." << std::endl;
             return false;
         }
-
-
-
-
 
         returnCard(player, CardType::Lumber);
         returnCard(player, CardType::Brick);

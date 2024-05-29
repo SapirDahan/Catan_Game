@@ -50,8 +50,9 @@ namespace ariel {
         bool returnCard(Player player, CardType type);
         bool playerHasCards(Player player, CardType type, unsigned int amount) const;
 
-        bool placeSettlement(Player player, unsigned int intersectionIndex);
         bool placeRoad(Player player, unsigned int pathIndex);
+        bool placeSettlement(Player player, unsigned int intersectionIndex);
+
 
     };
 }

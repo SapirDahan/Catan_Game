@@ -103,17 +103,27 @@ namespace ariel {
             for (unsigned int i = 0; i < 2; ++i) {
                 takeCard(player, CardType::Wool);
                 takeCard(player, CardType::Grain);
+
             }
 
             std::cout << player.getName() << " has received the initial resource cards: 4 Lumber, 4 Bricks, 2 Wool, and 2 Grain." << std::endl;
             std::cout << player.getName() << " should now build two roads and two settlements using these cards." << std::endl;
         }
+
+//        for (const auto& entry : cardOwnership) {
+//
+//            cout<< "player " << entry.second->getName() << endl;
+//        }
     }
 
     bool Catan::takeCard(Player player, CardType type) {
         std::shared_ptr<Card> card = findAvailableCard(type);
         if (card) {
             cardOwnership[card] = &player;
+
+            for (const auto& entry : cardOwnership) {
+                cout << "player " << entry.second->getName() << endl;
+            }
             return true;
         }
         std::cout << "No available card of type " << static_cast<int>(type) << " to take." << std::endl;
@@ -124,7 +134,10 @@ namespace ariel {
         for (const auto& entry : cardOwnership) {
             std::shared_ptr<Card> card = entry.first;
             Player* owner = entry.second;
+            cout<<"has type card before: " << (playerHasCards(player, type, 5) == true) <<endl;
             if (card->getType() == type && owner->getName() == player.getName()) {
+                cout<<"has type card after: " << (playerHasCards(player, type, 5) == true) <<endl;
+
                 cardOwnership.erase(card);
                 return true;
             }
@@ -170,6 +183,11 @@ namespace ariel {
             std::cout << "The player does not have the required resources (1 Lumber and 1 Brick) to build a road." << std::endl;
             return false;
         }
+
+
+
+
+
         returnCard(player, CardType::Lumber);
         returnCard(player, CardType::Brick);
         path.setOwner(&player);

@@ -24,6 +24,7 @@ namespace ariel {
 
     void Game::start() {
         unsigned int resultOfDice;
+        unsigned int numOfRollingTheDice = 0;
 
         while (true) {
             std::cout << std::endl;
@@ -41,9 +42,16 @@ namespace ariel {
 
             switch (choice) {
                 case 1:
-                    // Roll Dice logic here
-                    resultOfDice = catanGame->rollDices();
-                    std::cout << "Rolling dice... Result is: " << resultOfDice << std::endl;
+                    if(numOfRollingTheDice < 1){
+                        // Roll Dice logic here
+                        resultOfDice = catanGame->rollDices();
+                        std::cout << "Rolling dice... Result is: " << resultOfDice << std::endl;
+                        numOfRollingTheDice++;
+                    }
+                    else{
+                        std::cout << "You have already rolled the dices at this turn." << std::endl;
+                    }
+
                     break;
                 case 2:
                     buildMenu();
@@ -62,6 +70,7 @@ namespace ariel {
                     break;
                 case 6:
                     nextPlayer();
+                    numOfRollingTheDice = 0;
                     break;
                 default:
                     std::cout << "Invalid choice. Please try again." << std::endl;

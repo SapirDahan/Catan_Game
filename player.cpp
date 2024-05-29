@@ -8,6 +8,13 @@ namespace ariel {
         return name;
     }
 
+    void Player::addPoints(unsigned int points){
+        this->points += points;
+    }
+    unsigned int Player::getPoints() const{
+        return points;
+    }
+
 //    void Player::addResourceCard(std::shared_ptr<ResourceCard> card) {
 //        resourceCards.push_back(card);
 //    }

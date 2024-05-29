@@ -47,11 +47,13 @@ namespace ariel {
         unsigned int rollDices();
         void handFirstCards();
         bool takeCard(Player player, CardType type);
-        bool returnCard(Player player, CardType type);
+        bool returnCard(Player player, CardType type, unsigned int amount);
         bool playerHasCards(Player player, CardType type, unsigned int amount) const;
 
         bool placeRoad(Player player, unsigned int pathIndex);
         bool placeSettlement(Player player, unsigned int intersectionIndex);
+        bool placeCity(Player player, unsigned int intersectionIndex);
+
 
 
     };

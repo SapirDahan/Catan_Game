@@ -18,6 +18,7 @@ namespace ariel {
         Structure getStructure() const;
 
         Player *getOwner() const;
+        bool setOwner(Player* player);
 
         bool setStructure(Structure structure, Player *owner);
 

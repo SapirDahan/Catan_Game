@@ -7,6 +7,14 @@ Intersection::Intersection(unsigned int index) : index(index), structure(None), 
 unsigned int Intersection::getIndex() const { return index; }
 Intersection::Structure Intersection::getStructure() const { return structure; }
 Player* Intersection::getOwner() const { return owner; }
+bool Intersection::setOwner(ariel::Player* player) {
+    if (owner != nullptr) {
+        return false; // Path is already owned by another player
+    }
+
+    owner = player;
+    return true;
+}
 
 void Intersection::addAdjacentHexagon(unsigned int hexagonX, unsigned int hexagonY) {
     adjacentHexagons.emplace_back(hexagonX, hexagonY);

@@ -13,6 +13,8 @@ namespace ariel {
         Game();
         void start();
         void displayBoard() const;
+        void setRoadsandSettlements();
+
 
 
     private:
@@ -24,6 +26,8 @@ namespace ariel {
         void nextPlayer();
 
         void buildMenu();
+
+
     };
 
 } // namespace ariel

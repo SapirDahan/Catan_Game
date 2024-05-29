@@ -114,7 +114,7 @@ namespace ariel {
             case 3:
                 std::cout << "Enter intersection index to place city: ";
                 std::cin >> index;
-                //catanGame->placeCity(index);
+                catanGame->placeCity(catanGame->checkTurn(),index);
 
             default:
                 std::cout << "Invalid build choice. Please try again." << std::endl;
@@ -141,11 +141,51 @@ namespace ariel {
 //        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
 //    }
 
+    void Game::setRoadsandSettlements(){
+//        std::cout << "Build Options: " << std::endl;
+//        std::cout << "1. Road" << std::endl;
+//        std::cout << "2. Settlement" << std::endl;
+//        std::cout << "3. City" << std::endl;
+//        int buildChoice;
+//        std::cin >> buildChoice;
+//
+//        switch (buildChoice) {
 
 
+        unsigned int index;
+        bool buildSuccess;
+        int counter;
+
+        for(unsigned int i = 0; i < 3; i++){
+            counter = 0;
+            while(counter < 2){
+                cout << "Player " << catanGame->checkTurn().getName() << "choose an index for your road: " << endl;
+                std::cin >> index;
+                buildSuccess = catanGame->placeRoad(catanGame->checkTurn(), index);
+
+                if(buildSuccess){
+                    counter++;
+                }
+            }
+            counter = 0;
+
+            while(counter < 2){
+                cout << "Player " << catanGame->checkTurn().getName() << " choose an index for your settlement: " << endl;
+                std::cin >> index;
+                buildSuccess = catanGame->placeSettlement(catanGame->checkTurn(), index);
+
+                if(buildSuccess){
+                    counter++;
+                }
+            }
+
+            catanGame->nextPlayer();
+        }
+    }
 }
 int main() {
     ariel::Game game;
+    game.setRoadsandSettlements();
     game.start();
     return 0;
 }

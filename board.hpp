@@ -26,6 +26,12 @@ namespace ariel {
 
         unsigned int getIntersectionAdjacenciesSize();
         unsigned int getPathAdjacenciesSize();
+        const std::vector<std::pair<unsigned int, unsigned int>>& getPathAdjacencies() const;
+        const std::vector<std::vector<std::pair<unsigned int, unsigned int>>> getIntersectionAdjacencies();
+//        unsigned int getIntersectionAdjacenciesByIndex(unsigned int index);
+
+
+
 
     private:
         std::vector<Hexagon> hexagons;

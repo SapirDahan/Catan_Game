@@ -67,3 +67,15 @@ unsigned int Board::getIntersectionAdjacenciesSize(){
 unsigned int Board::getPathAdjacenciesSize(){
     return pathAdjacencies.size();
 }
+
+const std::vector<std::pair<unsigned int, unsigned int>>& Board::getPathAdjacencies() const {
+    return pathAdjacencies;
+}
+
+const std::vector<std::vector<std::pair<unsigned int, unsigned int>>> Board::getIntersectionAdjacencies(){
+    return intersectionAdjacencies;
+}
+//unsigned int Board::getIntersectionAdjacenciesByIndex(unsigned int index){
+//    return intersectionAdjacencies[index];
+//}
+

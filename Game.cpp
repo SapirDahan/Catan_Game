@@ -137,20 +137,9 @@ namespace ariel {
 //        }
     }
 
-//    void Game::nextPlayer() {
-//        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
-//    }
+
 
     void Game::setRoadsandSettlements(){
-//        std::cout << "Build Options: " << std::endl;
-//        std::cout << "1. Road" << std::endl;
-//        std::cout << "2. Settlement" << std::endl;
-//        std::cout << "3. City" << std::endl;
-//        int buildChoice;
-//        std::cin >> buildChoice;
-//
-//        switch (buildChoice) {
-
 
         unsigned int index;
         bool buildSuccess;

@@ -93,37 +93,35 @@ namespace ariel {
     }
 
     void Catan::handFirstCards() {
-        Player players[] = {player1, player2, player3};
-
-        for (const auto& player : players) {
-            for (unsigned int i = 0; i < 4; ++i) {
-                takeCard(player, CardType::Lumber);
-                takeCard(player, CardType::Brick);
-            }
-            for (unsigned int i = 0; i < 2; ++i) {
-                takeCard(player, CardType::Wool);
-                takeCard(player, CardType::Grain);
-
-            }
-
-            std::cout << player.getName() << " has received the initial resource cards: 4 Lumber, 4 Bricks, 2 Wool, and 2 Grain." << std::endl;
-            std::cout << player.getName() << " should now build two roads and two settlements using these cards." << std::endl;
+        for (unsigned int i = 0; i < 4; ++i) {
+            takeCard(player1, CardType::Lumber);
+            takeCard(player1, CardType::Brick);
+            takeCard(player2, CardType::Lumber);
+            takeCard(player2, CardType::Brick);
+            takeCard(player3, CardType::Lumber);
+            takeCard(player3, CardType::Brick);
         }
+        for (unsigned int i = 0; i < 2; ++i) {
+            takeCard(player1, CardType::Wool);
+            takeCard(player1, CardType::Grain);
+            takeCard(player2, CardType::Wool);
+            takeCard(player2, CardType::Grain);
+            takeCard(player3, CardType::Wool);
+            takeCard(player3, CardType::Grain);
+        }
+        std::cout << "Each player has received the initial resource cards: 4 Lumber, 4 Bricks, 2 Wool, and 2 Grain." << std::endl;
+        std::cout << "Each player should now build two roads and two settlements using these cards." << std::endl;
 
-//        for (const auto& entry : cardOwnership) {
-//
-//            cout<< "player " << entry.second->getName() << endl;
-//        }
+        Player players[] = {player1, player2, player3}; // Not needed!
+        for (const auto& entry : cardOwnership) {
+            cout<< "***player " << entry.second->getName() << " card number: " << entry.first << endl;
+        }
     }
 
-    bool Catan::takeCard(Player player, CardType type) {
-        std::shared_ptr<Card> card = findAvailableCard(type);
-        if (card) {
-            cardOwnership[card] = &player;
-
-            for (const auto& entry : cardOwnership) {
-                cout << "player " << entry.second->getName() << endl;
-            }
+    bool Catan::takeCard(Player& player, CardType type) {
+        unsigned int cardNumber = findAvailableCard(type);
+        if (cardNumber != 1000) {
+            cardOwnership[cardNumber] = &player;
             return true;
         }
         std::cout << "No available card of type " << static_cast<int>(type) << " to take." << std::endl;
@@ -131,38 +129,45 @@ namespace ariel {
     }
 
     bool Catan::returnCard(Player player, CardType type, unsigned int amount) {
+        unsigned int counter = 0;
         for(unsigned int i = 0; i < amount; i++){
             for (const auto& entry : cardOwnership) {
-                std::shared_ptr<Card> card = entry.first;
+                unsigned int card = entry.first;
                 Player* owner = entry.second;
                 //cout<<"has type card before: " << (playerHasCards(player, type, 5) == true) <<endl;
-                if (card->getType() == type && owner->getName() == player.getName()) {
+                if (cards[card]->getType() == type && owner->getName() == player.getName()) {
                     //cout<<"has type card after: " << (playerHasCards(player, type, 5) == true) <<endl;
 
                     cardOwnership.erase(card);
+                    counter++;
+                    break;
+                }
+
+                if(counter == amount){
                     return true;
                 }
             }
         }
 
+
         std::cout << "No card of type " << static_cast<int>(type) << " owned by " << player.getName() << " to return." << std::endl;
         return false;
     }
 
-    std::shared_ptr<Card> Catan::findAvailableCard(CardType type) {
-        for (const auto& card : cards) {
-            if (card->getType() == type && cardOwnership.find(card) == cardOwnership.end()) {
-                return card;
+     unsigned int Catan::findAvailableCard(CardType type) {
+        for (unsigned int i = 0; i < cards.size(); i++) {
+            if (cards[i]->getType() == type && cardOwnership.find(i) == cardOwnership.end()) {
+                return i;
             }
         }
-        return nullptr;
+        return 1000;
     }
 
     bool Catan::playerHasCards(Player player, CardType type, unsigned int amount) const {
         unsigned int count = 0;
         for (const auto& entry : cardOwnership) {
 
-            if (entry.second->getName() == player.getName() && entry.first->getType() == type) {
+            if (entry.second->getName() == player.getName() && cards[entry.first]->getType() == type) {
                 count++;
                 if (count >= amount) {
                     return true;
@@ -204,6 +209,17 @@ namespace ariel {
             std::cout << "This intersection is already owned by a player." << std::endl;
             return false;
         }
+
+        for(const auto& path : board.getPathAdjacencies()){
+            if(path.first == intersectionIndex){
+                if(board.getIntersection(path.second).getOwner()->getName() != player.getName() ||
+                        board.getIntersection(path.second).getOwner() == nullptr){
+                    std::cout << "Illegal place to place settlement" << std::endl;
+                    return false;
+                }
+            }
+        }
+
         if (!playerHasCards(player, CardType::Lumber, 1) ||
             !playerHasCards(player, CardType::Brick, 1) ||
             !playerHasCards(player, CardType::Wool, 1) ||
@@ -212,6 +228,8 @@ namespace ariel {
             std::cout << "The player does not have the required resources (1 Lumber, 1 Brick, 1 Wool, and 1 Grain) to build a road." << std::endl;
             return false;
         }
+
+
 
         returnCard(player, CardType::Lumber, 1);
         returnCard(player, CardType::Brick, 1);

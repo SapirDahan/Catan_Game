@@ -72,6 +72,7 @@ namespace ariel {
                     break;
                 case 6:
                     showStatus();
+                    break;
                 case 7:
                     catanGame->nextPlayer();
                     numOfRollingTheDice = 0;
@@ -130,6 +131,7 @@ namespace ariel {
         std::cout << "2. Cards of player 2" << std::endl;
         std::cout << "3. Cards of player 3" << std::endl;
         std::cout << "4. Show board" << std::endl;
+        std::cout << "5. Show points" << std::endl;
 
 
         int statusChoice;
@@ -138,14 +140,19 @@ namespace ariel {
         switch (statusChoice) {
 
             case 1:
-                //catanGame->showPlayerCards();
+                catanGame->showPlayerCards(*players[0]);
                 break;
             case 2:
+                catanGame->showPlayerCards(*players[1]);
                 break;
             case 3:
+                catanGame->showPlayerCards(*players[2]);
                 break;
             case 4:
                 catanGame->displayBoard();
+                break;
+            case 5:
+                catanGame->displayPoints();
                 break;
             default:
                 break;

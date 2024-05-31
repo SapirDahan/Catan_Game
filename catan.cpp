@@ -209,7 +209,7 @@ namespace ariel {
 
     }
 
-    bool Catan::placeSettlement(Player  player, unsigned int intersectionIndex) {
+    bool Catan::placeSettlement(Player& player, unsigned int intersectionIndex) {
         if(intersectionIndex >= board.getIntersectionAdjacenciesSize()){
             std::cout << "Index out of bound." << std::endl;
             return  false;
@@ -221,8 +221,13 @@ namespace ariel {
 
         for(const auto& path : board.getPathAdjacencies()){
             if(path.first == intersectionIndex){
-                if(board.getIntersection(path.second).getOwner()->getName() != player.getName() ||
-                        board.getIntersection(path.second).getOwner() == nullptr){
+                if(board.getIntersection(path.second).getOwner() != nullptr){
+                    std::cout << "Illegal place to place settlement" << std::endl;
+                    return false;
+                }
+            }
+            if(path.second == intersectionIndex){
+                if(board.getIntersection(path.first).getOwner() != nullptr){
                     std::cout << "Illegal place to place settlement" << std::endl;
                     return false;
                 }
@@ -246,14 +251,14 @@ namespace ariel {
         returnCard(player, CardType::Grain, 1);
         board.getIntersection(intersectionIndex).setOwner(&player);
         std::cout << "Your settlement has been placed." << std::endl;
-        player.addPoints(1);
+        addPoints(player, 1);
 
         return true;
 
     }
 
 
-    bool Catan::placeCity(ariel::Player player, unsigned int intersectionIndex) {
+    bool Catan::placeCity(Player& player, unsigned int intersectionIndex) {
         if(intersectionIndex >= board.getIntersectionAdjacenciesSize()){
             std::cout << "Index out of bound." << std::endl;
             return  false;
@@ -278,7 +283,7 @@ namespace ariel {
         returnCard(player, CardType::Grain, 2);
         board.getIntersection(intersectionIndex).setOwner(&player);
         std::cout << "Your city has been placed." << std::endl;
-        player.addPoints(1);
+        addPoints(player, 1);
 
         return true;
 
@@ -301,6 +306,61 @@ namespace ariel {
     }
 
     void Catan::showPlayerCards(Player& player) const{
+//        for (const auto& entry : cardOwnership) {
+//            if(entry.second->getName() == player.getName()){
+//                cout<< "Player " << entry.second->getName() << "have the card: " << cardTypeToString(cards[entry.first]->getType()) << endl;
+//            }
+//        }
+
+        std::unordered_map<CardType, int> cardCounts;
+
+        for (const auto& entry : cardOwnership) {
+            if (entry.second->getName() == player.getName()) {
+                CardType cardType = cards.at(entry.first)->getType();
+                cardCounts[cardType]++;
+            }
+        }
+
+        std::cout << "Player " << player.getName() << " has the following cards:" << std::endl;
+        for (const auto& count : cardCounts) {
+            std::cout << cardTypeToString(count.first) << ": " << count.second << std::endl;
+        }
+    }
+
+    std::string Catan::cardTypeToString(CardType cardType) const{
+        switch (cardType) {
+            case CardType::Lumber: return "Lumber";
+            case CardType::Brick: return "Brick";
+            case CardType::Wool: return "Wool";
+            case CardType::Grain: return "Grain";
+            case CardType::Ore: return "Ore";
+            case CardType::Knight: return "Knight";
+            case CardType::VictoryPoint: return "Victory Point";
+            case CardType::RoadBuilding: return "Road Building";
+            case CardType::YearOfPlenty: return "Year of Plenty";
+            case CardType::Monopoly: return "Monopoly";
+            case CardType::LargestArmy: return "Largest Army";
+            default: return "Unknown";
+        }
+    }
+
+    void Catan::displayPoints() {
+        cout <<"Player " << player1.getName() << " has " << player1.getPoints() << " points" << endl;
+        cout <<"Player " << player2.getName() << " has " << player2.getPoints() << " points" << endl;
+        cout <<"Player " << player3.getName() << " has " << player3.getPoints() << " points" << endl;
+
+    }
+
+    void Catan::addPoints(Player& player, unsigned int points) {
+        if(player.getName() == player1.getName()){
+            player1.addPoints(points);
+        }
+        if(player.getName() == player2.getName()){
+            player2.addPoints(points);
+        }
+        if(player.getName() == player3.getName()){
+            player3.addPoints(points);
+        }
 
     }
 

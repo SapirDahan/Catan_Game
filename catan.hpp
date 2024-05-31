@@ -51,11 +51,15 @@ namespace ariel {
         bool playerHasCards(Player& player, CardType type, unsigned int amount) const;
 
         bool placeRoad(Player& player, unsigned int pathIndex);
-        bool placeSettlement(Player player, unsigned int intersectionIndex);
-        bool placeCity(Player player, unsigned int intersectionIndex);
+        bool placeSettlement(Player& player, unsigned int intersectionIndex);
+        bool placeCity(Player& player, unsigned int intersectionIndex);
 
         void displayBoard() const;
         void showPlayerCards(Player& player) const;
+
+        std::string cardTypeToString(CardType cardType) const;
+        void displayPoints();
+        void addPoints(Player& player, unsigned int points);
 
 
 

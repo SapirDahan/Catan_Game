@@ -8,8 +8,8 @@ namespace ariel {
         return name;
     }
 
-    void Player::addPoints(unsigned int points){
-        this->points += points;
+    void Player::addPoints(unsigned int point){
+        this->points = this->points + point;
     }
     unsigned int Player::getPoints() const{
         return points;

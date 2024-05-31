@@ -24,6 +24,7 @@ namespace ariel {
 
         void welcomeAndSetupPlayers();
         void nextPlayer();
+        void showStatus();
 
         void buildMenu();
 

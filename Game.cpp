@@ -28,15 +28,16 @@ namespace ariel {
 
         while (true) {
             std::cout << std::endl;
-            std::cout << catanGame->checkTurn().getName() << ", it's your turn." << std::endl;
+            std::cout << catanGame->checkTurn()->getName() << ", it's your turn." << std::endl;
             std::cout << "Choose action: " << std::endl;
             std::cout << "1. Roll Dice" << std::endl;
             std::cout << "2. Build" << std::endl;
             std::cout << "3. Trade" << std::endl;
             std::cout << "4. Buy Development Card" << std::endl;
             std::cout << "5. Play Development Card" << std::endl;
-            std::cout << "6. End Turn" << std::endl;
-            std::cout << "7. End the Game" << std::endl;
+            std::cout << "6. Show status" << std::endl;
+            std::cout << "7. End Turn" << std::endl;
+            std::cout << "8. End the Game" << std::endl;
 
             int choice;
             std::cin >> choice;
@@ -70,10 +71,12 @@ namespace ariel {
                     std::cout << "Playing development card... (not implemented yet)" << std::endl;
                     break;
                 case 6:
+                    showStatus();
+                case 7:
                     catanGame->nextPlayer();
                     numOfRollingTheDice = 0;
                     break;
-                case 7:
+                case 8:
                     // check i someone won
                     cout << "Existing the game" << endl;
                     break;
@@ -82,7 +85,7 @@ namespace ariel {
 
             }
 
-            if(choice == 7){
+            if(choice == 8){
                 break;
             }
         }
@@ -102,40 +105,53 @@ namespace ariel {
             case 1:
                 std::cout << "Enter path index to place road: ";
                 std::cin >> index;
-                catanGame->placeRoad(catanGame->checkTurn(), index);
+                //catanGame->placeRoad(catanGame->checkTurn(), index);
 
                 break;
 
             case 2:
                 std::cout << "Enter intersection index to place settlement: ";
                 std::cin >> index;
-                catanGame->placeSettlement(catanGame->checkTurn(),index);
+                //catanGame->placeSettlement(catanGame->checkTurn(),index);
                 break;
             case 3:
                 std::cout << "Enter intersection index to place city: ";
                 std::cin >> index;
-                catanGame->placeCity(catanGame->checkTurn(),index);
+                //catanGame->placeCity(catanGame->checkTurn(),index);
 
             default:
                 std::cout << "Invalid build choice. Please try again." << std::endl;
         }
     }
 
-    void Game::displayBoard() const {
-//        Board board = catanGame->getBoard();
-//        std::cout << "Board Status:" << std::endl;
-//        for (const auto& hexagon : board.getHexagons()) {
-//            std::cout << "Hexagon (" << hexagon.getX() << ", " << hexagon.getY() << ") - Type: " << hexagon.getType() << ", Number: " << hexagon.getNumber() << std::endl;
-//        }
-//        for (const auto& row : board.getIntersections()) {
-//            for (const auto& intersection : row) {
-//                std::cout << "Intersection " << intersection.getIndex() << " - Structure: " << intersection.getStructure() << ", Owner: " << (intersection.getOwner() ? intersection.getOwner()->getName() : "None") << std::endl;
-//            }
-//        }
-//        for (const auto& path : board.getPaths()) {
-//            std::cout << "Path " << path.getIndex() << " - Owner: " << (path.getOwner() ? path.getOwner()->getName() : "None") << std::endl;
-//        }
+    void Game::showStatus(){
+        std::cout << "Status Options: " << std::endl;
+        std::cout << "1. Cards of player 1" << std::endl;
+        std::cout << "2. Cards of player 2" << std::endl;
+        std::cout << "3. Cards of player 3" << std::endl;
+        std::cout << "4. Show board" << std::endl;
+
+
+        int statusChoice;
+        std::cin >> statusChoice;
+
+        switch (statusChoice) {
+
+            case 1:
+                //catanGame->showPlayerCards();
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                catanGame->displayBoard();
+                break;
+            default:
+                break;
+        }
     }
+
 
 
 
@@ -148,9 +164,9 @@ namespace ariel {
         for(unsigned int i = 0; i < 3; i++){
             counter = 0;
             while(counter < 2){
-                cout << "Player " << catanGame->checkTurn().getName() << "choose an index for your road: " << endl;
+                cout << "Player " << catanGame->checkTurn()->getName() << "choose an index for your road: " << endl;
                 std::cin >> index;
-                buildSuccess = catanGame->placeRoad(catanGame->checkTurn(), index);
+                buildSuccess = catanGame->placeRoad(*catanGame->checkTurn(), index);
 
                 if(buildSuccess){
                     counter++;
@@ -159,9 +175,9 @@ namespace ariel {
             counter = 0;
 
             while(counter < 2){
-                cout << "Player " << catanGame->checkTurn().getName() << " choose an index for your settlement: " << endl;
+                cout << "Player " << catanGame->checkTurn()->getName() << " choose an index for your settlement: " << endl;
                 std::cin >> index;
-                buildSuccess = catanGame->placeSettlement(catanGame->checkTurn(), index);
+                buildSuccess = catanGame->placeSettlement(*catanGame->checkTurn(), index);
 
                 if(buildSuccess){
                     counter++;

@@ -4,7 +4,7 @@ using namespace std;
 
 namespace ariel {
     // Constructor
-    Catan::Catan(Player p1, Player p2, Player p3) : turn(p1), player1(p1), player2(p2), player3(p3), dice() {
+    Catan::Catan(Player& p1, Player& p2, Player& p3) : turn(p1), player1(p1), player2(p2), player3(p3), dice() {
         // Create all the cards in the game
 
         // Add Resource Cards
@@ -93,6 +93,7 @@ namespace ariel {
     }
 
     void Catan::handFirstCards() {
+
         for (unsigned int i = 0; i < 4; ++i) {
             takeCard(player1, CardType::Lumber);
             takeCard(player1, CardType::Brick);
@@ -112,10 +113,16 @@ namespace ariel {
         std::cout << "Each player has received the initial resource cards: 4 Lumber, 4 Bricks, 2 Wool, and 2 Grain." << std::endl;
         std::cout << "Each player should now build two roads and two settlements using these cards." << std::endl;
 
-        Player players[] = {player1, player2, player3}; // Not needed!
-        for (const auto& entry : cardOwnership) {
-            cout<< "***player " << entry.second->getName() << " card number: " << entry.first << endl;
-        }
+//        for (const auto& entry : cardOwnership) {
+//            cout<< "***player " << entry.second->getName() << " card number: " << entry.first << endl;
+//        }
+
+//        cout<< " has 1 grain" << playerHasCards(player1, CardType::Grain, 1) << endl;
+//        cout<< " has 2 grain" << playerHasCards(player1, CardType::Grain, 2) << endl;
+//        cout<< " has 3 grain" << playerHasCards(player1, CardType::Grain, 3) << endl;
+
+
+
     }
 
     bool Catan::takeCard(Player& player, CardType type) {
@@ -128,24 +135,20 @@ namespace ariel {
         return false;
     }
 
-    bool Catan::returnCard(Player player, CardType type, unsigned int amount) {
+    bool Catan::returnCard(Player& player, CardType type, unsigned int amount) {
         unsigned int counter = 0;
-        for(unsigned int i = 0; i < amount; i++){
-            for (const auto& entry : cardOwnership) {
-                unsigned int card = entry.first;
-                Player* owner = entry.second;
-                //cout<<"has type card before: " << (playerHasCards(player, type, 5) == true) <<endl;
-                if (cards[card]->getType() == type && owner->getName() == player.getName()) {
-                    //cout<<"has type card after: " << (playerHasCards(player, type, 5) == true) <<endl;
+        for (const auto& entry : cardOwnership) {
+            unsigned int card = entry.first;
+            Player* owner = entry.second;
+            if (cards[card]->getType() == type && owner->getName() == player.getName()) {
 
-                    cardOwnership.erase(card);
-                    counter++;
-                    break;
-                }
+                cardOwnership.erase(card);
+                counter++;
+            }
 
-                if(counter == amount){
-                    return true;
-                }
+            if(counter == amount){
+                cout<<"card has returned" << endl;
+                return true;
             }
         }
 
@@ -163,10 +166,11 @@ namespace ariel {
         return 1000;
     }
 
-    bool Catan::playerHasCards(Player player, CardType type, unsigned int amount) const {
+    bool Catan::playerHasCards(Player& player, CardType type, unsigned int amount) const {
         unsigned int count = 0;
         for (const auto& entry : cardOwnership) {
 
+            //cout<<(entry.second->getName() == player.getName() )<< " " <<(cards[entry.first]->getType() == type) <<endl;
             if (entry.second->getName() == player.getName() && cards[entry.first]->getType() == type) {
                 count++;
                 if (count >= amount) {
@@ -177,15 +181,19 @@ namespace ariel {
         return false;
     }
 
-    bool Catan::placeRoad(Player  player, unsigned int pathIndex) {
+    bool Catan::placeRoad(Player& player, unsigned int pathIndex) {
+
         if(pathIndex >= board.getPathAdjacenciesSize()){
             std::cout << "Index out of bound." << std::endl;
-            return  false;
+            return false;
         }
+
         if (board.getPath(pathIndex).getOwner() != nullptr) {
             std::cout << "This path is already owned by a player." << std::endl;
             return false;
         }
+
+
         if (!playerHasCards(player, CardType::Lumber, 1) || !playerHasCards(player, CardType::Brick, 1)) {
             std::cout << "The player does not have the required resources (1 Lumber and 1 Brick) to build a road." << std::endl;
             return false;
@@ -197,6 +205,7 @@ namespace ariel {
         std::cout << "Your road has been placed." << std::endl;
 
         return true;
+
 
     }
 
@@ -274,4 +283,25 @@ namespace ariel {
         return true;
 
     }
+
+    void Catan::displayBoard() const {
+//        Board board = catanGame->getBoard();
+//        std::cout << "Board Status:" << std::endl;
+//        for (const auto& hexagon : board.getHexagons()) {
+//            std::cout << "Hexagon (" << hexagon.getX() << ", " << hexagon.getY() << ") - Type: " << hexagon.getType() << ", Number: " << hexagon.getNumber() << std::endl;
+//        }
+//        for (const auto& row : board.getIntersections()) {
+//            for (const auto& intersection : row) {
+//                std::cout << "Intersection " << intersection.getIndex() << " - Structure: " << intersection.getStructure() << ", Owner: " << (intersection.getOwner() ? intersection.getOwner()->getName() : "None") << std::endl;
+//            }
+//        }
+//        for (const auto& path : board.getPaths()) {
+//            std::cout << "Path " << path.getIndex() << " - Owner: " << (path.getOwner() ? path.getOwner()->getName() : "None") << std::endl;
+//        }
+    }
+
+    void Catan::showPlayerCards(Player& player) const{
+
+    }
+
 }

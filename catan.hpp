@@ -38,23 +38,26 @@ namespace ariel {
 
 
     public:
-        Catan(Player p1, Player p2, Player p3);
+        Catan(Player& p1, Player& p2, Player& p3);
         void ChooseStartingPlayer() const;
         void printWinner() const;
         Board getBoard() const;
-        Player checkTurn() const{ return turn; }
+        Player* checkTurn() { return &turn; }
         Player nextPlayer();
         unsigned int rollDices();
         void handFirstCards();
         bool takeCard(Player& player, CardType type);
-        bool returnCard(Player player, CardType type, unsigned int amount);
-        bool playerHasCards(Player player, CardType type, unsigned int amount) const;
+        bool returnCard(Player& player, CardType type, unsigned int amount);
+        bool playerHasCards(Player& player, CardType type, unsigned int amount) const;
 
-        bool placeRoad(Player player, unsigned int pathIndex);
+        bool placeRoad(Player& player, unsigned int pathIndex);
         bool placeSettlement(Player player, unsigned int intersectionIndex);
         bool placeCity(Player player, unsigned int intersectionIndex);
 
+        void displayBoard() const;
+        void showPlayerCards(Player& player) const;
 
 
-    };
+
+        };
 }

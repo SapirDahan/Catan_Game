@@ -113,12 +113,12 @@ namespace ariel {
             case 2:
                 std::cout << "Enter intersection index to place settlement: ";
                 std::cin >> index;
-                //catanGame->placeSettlement(catanGame->checkTurn(),index);
+                catanGame->placeSettlement(*catanGame->checkTurn(),index);
                 break;
             case 3:
                 std::cout << "Enter intersection index to place city: ";
                 std::cin >> index;
-                //catanGame->placeCity(catanGame->checkTurn(),index);
+                catanGame->placeCity(*catanGame->checkTurn(),index);
 
             default:
                 std::cout << "Invalid build choice. Please try again." << std::endl;
@@ -197,7 +197,7 @@ namespace ariel {
 }
 int main() {
     ariel::Game game;
-    game.setRoadsandSettlements();
+    //game.setRoadsandSettlements();
     game.start();
     return 0;
 }

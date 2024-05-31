@@ -17,10 +17,10 @@ namespace ariel {
 
         Structure getStructure() const;
 
-        Player *getOwner() const;
+        Player* getOwner();
         bool setOwner(Player* player);
 
-        bool setStructure(Structure structure, Player *owner);
+        bool setStructure(Structure structure, Player& owner);
 
         void addAdjacentHexagon(unsigned int hexagonX, unsigned int hexagonY);
 

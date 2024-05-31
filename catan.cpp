@@ -250,6 +250,8 @@ namespace ariel {
         returnCard(player, CardType::Wool, 1);
         returnCard(player, CardType::Grain, 1);
         board.getIntersection(intersectionIndex).setOwner(&player);
+        board.getIntersection(intersectionIndex).setStructure(Intersection::Structure::Settlement, player);
+
         std::cout << "Your settlement has been placed." << std::endl;
         addPoints(player, 1);
 
@@ -270,18 +272,18 @@ namespace ariel {
 
         if(board.getIntersection(intersectionIndex).getStructure() != Intersection::Structure::Settlement){
             std::cout << "Can't update to city because on the intersection there isn't a Settlement." << std::endl;
-
+            return false;
         }
         if (!playerHasCards(player, CardType::Ore, 3) ||
             !playerHasCards(player, CardType::Grain, 2)) {
 
-            std::cout << "The player does not have the required resources (3 Ore and 2 Grain) to build a road." << std::endl;
+            std::cout << "The player does not have the required resources (3 Ore and 2 Grain) to build a city." << std::endl;
             return false;
         }
 
         returnCard(player, CardType::Ore, 3);
         returnCard(player, CardType::Grain, 2);
-        board.getIntersection(intersectionIndex).setOwner(&player);
+        board.getIntersection(intersectionIndex).setStructure(Intersection::Structure::City, player);
         std::cout << "Your city has been placed." << std::endl;
         addPoints(player, 1);
 

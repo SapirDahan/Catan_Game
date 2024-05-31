@@ -6,7 +6,7 @@ Intersection::Intersection(unsigned int index) : index(index), structure(None), 
 
 unsigned int Intersection::getIndex() const { return index; }
 Intersection::Structure Intersection::getStructure() const { return structure; }
-Player* Intersection::getOwner() const { return owner; }
+Player* Intersection::getOwner()  { return owner; }
 bool Intersection::setOwner(ariel::Player* player) {
     if (owner != nullptr) {
         return false; // Path is already owned by another player
@@ -23,15 +23,15 @@ const std::vector<std::pair<unsigned int, unsigned int>>& Intersection::getAdjac
     return adjacentHexagons;
 }
 
-bool Intersection::setStructure(Structure newStructure, Player *player) {
+bool Intersection::setStructure(Structure newStructure, Player& player) {
     if (newStructure == Settlement) {
         if (structure == None) {
             structure = Settlement;
-            this->owner = player;
+            this->owner = &player;
             return true;
         }
     } else if (newStructure == City) {
-        if (structure == Settlement && this->owner == player) {
+        if (structure == Settlement && this->owner->getName() == player.getName()) {
             structure = City;
             return true;
         }

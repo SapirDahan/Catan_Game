@@ -160,8 +160,6 @@ namespace ariel {
     }
 
 
-
-
     void Game::setRoadsandSettlements(){
 
         unsigned int index;
@@ -171,7 +169,7 @@ namespace ariel {
         for(unsigned int i = 0; i < 3; i++){
             counter = 0;
             while(counter < 2){
-                cout << "Player " << catanGame->checkTurn()->getName() << "choose an index for your road: " << endl;
+                cout << catanGame->checkTurn()->getName() << ", please choose an index for your road: " << endl;
                 std::cin >> index;
                 buildSuccess = catanGame->placeRoad(*catanGame->checkTurn(), index);
 
@@ -182,7 +180,7 @@ namespace ariel {
             counter = 0;
 
             while(counter < 2){
-                cout << "Player " << catanGame->checkTurn()->getName() << " choose an index for your settlement: " << endl;
+                cout << catanGame->checkTurn()->getName() << ", please choose an index for your settlement: " << endl;
                 std::cin >> index;
                 buildSuccess = catanGame->placeSettlement(*catanGame->checkTurn(), index);
 
@@ -197,7 +195,7 @@ namespace ariel {
 }
 int main() {
     ariel::Game game;
-    //game.setRoadsandSettlements();
+    game.setRoadsandSettlements();
     game.start();
     return 0;
 }

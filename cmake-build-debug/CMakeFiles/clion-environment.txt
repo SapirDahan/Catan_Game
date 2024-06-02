@@ -1,4 +1,4 @@
-ToolSet: 1.0 (local)Ninja: 1.12.0@/home/parallels/JetBrains/CLion/clion-2023.3.2/bin/ninja/linux/aarch64/ninja
+ToolSet: 1.0 (local)Ninja: 1.12.0@/Applications/CLion.app/Contents/bin/ninja/mac/aarch64/ninja
 Options: 
 
-Options:-DCMAKE_MAKE_PROGRAM=/home/parallels/JetBrains/CLion/clion-2023.3.2/bin/ninja/linux/aarch64/ninja
+Options:

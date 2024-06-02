@@ -131,7 +131,7 @@ namespace ariel {
             cardOwnership[cardNumber] = &player;
             return true;
         }
-        std::cout << "No available card of type " << static_cast<int>(type) << " to take." << std::endl;
+        std::cout << "Card of type " << static_cast<int>(type) << " is not available." << std::endl;
         return false;
     }
 
@@ -147,7 +147,7 @@ namespace ariel {
             }
 
             if(counter == amount){
-                cout<<"card has returned" << endl;
+                cout << player.getName() << " has just returned a " << getCardName(type) << " card to the bank." << endl;
                 return true;
             }
         }
@@ -184,51 +184,48 @@ namespace ariel {
     bool Catan::placeRoad(Player& player, unsigned int pathIndex) {
 
         if(pathIndex >= board.getPathAdjacenciesSize()){
-            std::cout << "Index out of bound." << std::endl;
+            std::cout << "Path index is out of bound." << std::endl;
             return false;
         }
 
         if (board.getPath(pathIndex).getOwner() != nullptr) {
-            std::cout << "This path is already owned by a player." << std::endl;
+            std::cout << "This path is already occupied." << std::endl;
             return false;
         }
 
-
         if (!playerHasCards(player, CardType::Lumber, 1) || !playerHasCards(player, CardType::Brick, 1)) {
-            std::cout << "The player does not have the required resources (1 Lumber and 1 Brick) to build a road." << std::endl;
+            std::cout << "You don't have the required resources (1 Lumber and 1 Brick) to build a road." << std::endl;
             return false;
         }
 
         returnCard(player, CardType::Lumber, 1);
         returnCard(player, CardType::Brick, 1);
         board.getPath(pathIndex).setOwner(&player);
-        std::cout << "Your road has been placed." << std::endl;
+        std::cout << player.getName() << ", your road has been placed on path " << pathIndex << "." << std::endl;
 
         return true;
-
-
     }
 
     bool Catan::placeSettlement(Player& player, unsigned int intersectionIndex) {
         if(intersectionIndex >= board.getIntersectionAdjacenciesSize()){
-            std::cout << "Index out of bound." << std::endl;
+            std::cout << "Intersection index is out of bound." << std::endl;
             return  false;
         }
         if (board.getIntersection(intersectionIndex).getOwner() != nullptr) {
-            std::cout << "This intersection is already owned by a player." << std::endl;
+            std::cout << "Intersection " << intersectionIndex << " is already occupied." << std::endl;
             return false;
         }
 
         for(const auto& path : board.getPathAdjacencies()){
             if(path.first == intersectionIndex){
                 if(board.getIntersection(path.second).getOwner() != nullptr){
-                    std::cout << "Illegal place to place settlement" << std::endl;
+                    std::cout << "Illegal place to place settlement. Please try again." << std::endl;
                     return false;
                 }
             }
             if(path.second == intersectionIndex){
                 if(board.getIntersection(path.first).getOwner() != nullptr){
-                    std::cout << "Illegal place to place settlement" << std::endl;
+                    std::cout << "Illegal place to place settlement. Please try again." << std::endl;
                     return false;
                 }
             }
@@ -239,11 +236,9 @@ namespace ariel {
             !playerHasCards(player, CardType::Wool, 1) ||
             !playerHasCards(player, CardType::Grain, 1)) {
 
-            std::cout << "The player does not have the required resources (1 Lumber, 1 Brick, 1 Wool, and 1 Grain) to build a road." << std::endl;
+            std::cout << player.getName() << ", you not have the required resources (1 Lumber, 1 Brick, 1 Wool, and 1 Grain) to build a settlement." << std::endl;
             return false;
         }
-
-
 
         returnCard(player, CardType::Lumber, 1);
         returnCard(player, CardType::Brick, 1);
@@ -252,7 +247,7 @@ namespace ariel {
         board.getIntersection(intersectionIndex).setOwner(&player);
         board.getIntersection(intersectionIndex).setStructure(Intersection::Structure::Settlement, player);
 
-        std::cout << "Your settlement has been placed." << std::endl;
+        std::cout << player.getName() << ", your settlement has been placed on intersection " << intersectionIndex << "." << std::endl;
         addPoints(player, 1);
 
         return true;
@@ -262,11 +257,11 @@ namespace ariel {
 
     bool Catan::placeCity(Player& player, unsigned int intersectionIndex) {
         if(intersectionIndex >= board.getIntersectionAdjacenciesSize()){
-            std::cout << "Index out of bound." << std::endl;
+            std::cout << "Intersection index is out of bound." << std::endl;
             return  false;
         }
         if (board.getIntersection(intersectionIndex).getOwner()->getName() != player.getName()) {
-            std::cout << "This intersection is not owned by player " << player.getName() << std::endl;
+            std::cout << "This intersection is not owned by " << player.getName() << std::endl;
             return false;
         }
 

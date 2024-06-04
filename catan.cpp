@@ -45,8 +45,9 @@ namespace ariel {
 
     }
 
+
     void Catan::ChooseStartingPlayer() const{
-        cout << "The starting player is: " << turn.getName() << "!" << endl;
+        cout  << std::endl << "The starting player is: " << turn.getName() << "!" << endl;
     }
 
 //    void Catan::printWinner() const{
@@ -111,18 +112,7 @@ namespace ariel {
             takeCard(player3, CardType::Grain);
         }
         std::cout << "Each player has received the initial resource cards: 4 Lumber, 4 Bricks, 2 Wool, and 2 Grain." << std::endl;
-        std::cout << "Each player should now build two roads and two settlements using these cards." << std::endl;
-
-//        for (const auto& entry : cardOwnership) {
-//            cout<< "***player " << entry.second->getName() << " card number: " << entry.first << endl;
-//        }
-
-//        cout<< " has 1 grain" << playerHasCards(player1, CardType::Grain, 1) << endl;
-//        cout<< " has 2 grain" << playerHasCards(player1, CardType::Grain, 2) << endl;
-//        cout<< " has 3 grain" << playerHasCards(player1, CardType::Grain, 3) << endl;
-
-
-
+        std::cout << "Before the game starts, each player shall build two roads and two settlements using these cards." << std::endl;
     }
 
     bool Catan::takeCard(Player& player, CardType type) {
@@ -147,7 +137,7 @@ namespace ariel {
             }
 
             if(counter == amount){
-                cout << player.getName() << " has just returned a " << getCardName(type) << " card to the bank." << endl;
+                cout << player.getName() << " has just returned a " << cardTypeToString(type) << " card to the bank." << endl;
                 return true;
             }
         }
@@ -303,25 +293,29 @@ namespace ariel {
     }
 
     void Catan::showPlayerCards(Player& player) const{
-//        for (const auto& entry : cardOwnership) {
-//            if(entry.second->getName() == player.getName()){
-//                cout<< "Player " << entry.second->getName() << "have the card: " << cardTypeToString(cards[entry.first]->getType()) << endl;
-//            }
-//        }
 
         std::unordered_map<CardType, int> cardCounts;
+        unsigned totalCards;
+
+        totalCards = 0;
 
         for (const auto& entry : cardOwnership) {
             if (entry.second->getName() == player.getName()) {
                 CardType cardType = cards.at(entry.first)->getType();
                 cardCounts[cardType]++;
+                totalCards++;
             }
         }
-
-        std::cout << "Player " << player.getName() << " has the following cards:" << std::endl;
-        for (const auto& count : cardCounts) {
-            std::cout << cardTypeToString(count.first) << ": " << count.second << std::endl;
+        if (totalCards > 0) {
+            std::cout << std::endl << player.getName() << " has the following cards:" << std::endl;
+            for (const auto &count: cardCounts) {
+                std::cout << cardTypeToString(count.first) << ": " << count.second << std::endl;
+            }
         }
+        else {
+            std::cout << std::endl << player.getName() << " has no cards." << std::endl;
+        }
+
     }
 
     std::string Catan::cardTypeToString(CardType cardType) const{
@@ -342,10 +336,10 @@ namespace ariel {
     }
 
     void Catan::displayPoints() {
-        cout <<"Player " << player1.getName() << " has " << player1.getPoints() << " points" << endl;
-        cout <<"Player " << player2.getName() << " has " << player2.getPoints() << " points" << endl;
-        cout <<"Player " << player3.getName() << " has " << player3.getPoints() << " points" << endl;
-
+        cout << endl << "Scoreboard:" << endl;
+        cout << player1.getName() << " has " << player1.getPoints() << " points" << endl;
+        cout << player2.getName() << " has " << player2.getPoints() << " points" << endl;
+        cout << player3.getName() << " has " << player3.getPoints() << " points" << endl;
     }
 
     void Catan::addPoints(Player& player, unsigned int points) {

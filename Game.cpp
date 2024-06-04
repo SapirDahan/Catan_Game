@@ -6,20 +6,20 @@ namespace ariel {
     Game::Game() : currentPlayerIndex(0) {
         welcomeAndSetupPlayers();
         catanGame = std::make_shared<Catan>(*players[0], *players[1], *players[2]);
-        catanGame->ChooseStartingPlayer();
         catanGame->handFirstCards();
+        catanGame->ChooseStartingPlayer();
     }
 
     void Game::welcomeAndSetupPlayers() {
-        std::cout << "Welcome to Catan!" << std::endl;
-        std::cout << "Please enter the names of 3 players:" << std::endl;
-
+        std::cout << std::endl << "Welcome to Catan!" << std::endl;
+        std::cout << std::endl << "Please enter the names of 3 players:" << std::endl;
         for (int i = 1; i <= 3; ++i) {
             std::string name;
             std::cout << "Player " << i << ": ";
             std::cin >> name;
             players.push_back(std::make_shared<Player>(name));
         }
+        std::cout << std::endl;
     }
 
     void Game::start() {
@@ -169,7 +169,7 @@ namespace ariel {
         for(unsigned int i = 0; i < 3; i++){
             counter = 0;
             while(counter < 2){
-                cout << catanGame->checkTurn()->getName() << ", please choose an index for your road: " << endl;
+                cout << endl << catanGame->checkTurn()->getName() << ", please choose an index for your road: ";
                 std::cin >> index;
                 buildSuccess = catanGame->placeRoad(*catanGame->checkTurn(), index);
 
@@ -180,7 +180,7 @@ namespace ariel {
             counter = 0;
 
             while(counter < 2){
-                cout << catanGame->checkTurn()->getName() << ", please choose an index for your settlement: " << endl;
+                cout << endl << catanGame->checkTurn()->getName() << ", please choose an index for your settlement: ";
                 std::cin >> index;
                 buildSuccess = catanGame->placeSettlement(*catanGame->checkTurn(), index);
 
@@ -188,11 +188,15 @@ namespace ariel {
                     counter++;
                 }
             }
-
+            // catanGame->showPlayerCards(*players[i]);
             catanGame->nextPlayer();
         }
+        // Show how many cards each player has now, and announce the beginning of the game
+        std::cout << std::endl << "Initial placements is completed." << std::endl;
+        std::cout << std::endl << "Let the game begin!" << std::endl;
     }
 }
+
 int main() {
     ariel::Game game;
     game.setRoadsandSettlements();

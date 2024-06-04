@@ -188,10 +188,8 @@ namespace ariel {
                     counter++;
                 }
             }
-            // catanGame->showPlayerCards(*players[i]);
             catanGame->nextPlayer();
         }
-        // Show how many cards each player has now, and announce the beginning of the game
         std::cout << std::endl << "Initial placements is completed." << std::endl;
         std::cout << std::endl << "Let the game begin!" << std::endl;
     }

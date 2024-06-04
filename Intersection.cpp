@@ -9,9 +9,8 @@ Intersection::Structure Intersection::getStructure() const { return structure; }
 Player* Intersection::getOwner()  { return owner; }
 bool Intersection::setOwner(ariel::Player* player) {
     if (owner != nullptr) {
-        return false; // Path is already owned by another player
+        return false; // Intersection is already owned by another player
     }
-
     owner = player;
     return true;
 }

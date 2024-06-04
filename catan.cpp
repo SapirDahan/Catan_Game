@@ -112,7 +112,7 @@ namespace ariel {
             takeCard(player3, CardType::Grain);
         }
         std::cout << "Each player has received the initial resource cards: 4 Lumber, 4 Bricks, 2 Wool, and 2 Grain." << std::endl;
-        std::cout << "Before the game starts, each player shall build two roads and two settlements using these cards." << std::endl;
+        std::cout << "Before the game begins, each player shall build two roads and two settlements using these cards." << std::endl;
     }
 
     bool Catan::takeCard(Player& player, CardType type) {
@@ -206,19 +206,36 @@ namespace ariel {
             return false;
         }
 
+        bool hasAdjacentRoad;
+        hasAdjacentRoad = false;
+
         for(const auto& path : board.getPathAdjacencies()){
             if(path.first == intersectionIndex){
                 if(board.getIntersection(path.second).getOwner() != nullptr){
-                    std::cout << "Illegal place to place settlement. Please try again." << std::endl;
+                    std::cout << "Illegal place to place settlement. Too close to another settlement/city. Please try again." << std::endl;
                     return false;
                 }
             }
-            if(path.second == intersectionIndex){
-                if(board.getIntersection(path.first).getOwner() != nullptr){
-                    std::cout << "Illegal place to place settlement. Please try again." << std::endl;
+            if(path.second == intersectionIndex) {
+                if (board.getIntersection(path.first).getOwner() != nullptr) {
+                    std::cout
+                            << "Illegal place to place settlement. Too close to another settlement/city. Please try again."
+                            << std::endl;
                     return false;
                 }
             }
+        }
+
+        for (unsigned int i = 0; i < board.getPathAdjacenciesSize(); i++) {
+            auto intersections = board.getPath(i).getIntersections();
+            if ((board.getPath(i).getOwner() == &player) && ((intersections.first == intersectionIndex) || (intersections.second == intersectionIndex))) {
+                hasAdjacentRoad = true;
+                //break;
+            }
+        }
+        if (!hasAdjacentRoad) {
+            std::cout << "Illegal place to place settlement. You must have at least one road adjacent to the intersection. Please try again." << std::endl;
+            return false;
         }
 
         if (!playerHasCards(player, CardType::Lumber, 1) ||

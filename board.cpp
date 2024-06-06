@@ -82,7 +82,5 @@ const std::vector<Hexagon>& Board::getHexagons() const {
 const std::vector<Intersection>& Board::getIntersections() const {
     return intersections;
 }
-//unsigned int Board::getIntersectionAdjacenciesByIndex(unsigned int index){
-//    return intersectionAdjacencies[index];
-//}
+
 

@@ -121,10 +121,19 @@ namespace ariel {
     bool Catan::takeCard(Player& player, CardType type) {
         unsigned int cardNumber = findAvailableCard(type);
         if (cardNumber != 1000) {
-            cardOwnership[cardNumber] = &player;
+            if (player.getName() == player1.getName()) {
+                cardOwnership[cardNumber] = &player1;
+            }
+            if (player.getName() == player2.getName()) {
+                cardOwnership[cardNumber] = &player2;
+            }
+            if (player.getName() == player3.getName()) {
+                cardOwnership[cardNumber] = &player3;
+            }
+            std::cout << "Card of type " << cardTypeToString(type) << " handed to " << player.getName() << std::endl; // Debug statement
             return true;
         }
-        std::cout << "Card of type " << static_cast<int>(type) << " is not available." << std::endl;
+        std::cout << "Card of type " << cardTypeToString(type) << " is not available." << std::endl;
         return false;
     }
 
@@ -253,7 +262,7 @@ namespace ariel {
         returnCard(player, CardType::Brick, 1);
         returnCard(player, CardType::Wool, 1);
         returnCard(player, CardType::Grain, 1);
-        board.getIntersection(intersectionIndex).setOwner(&player);
+        // board.getIntersection(intersectionIndex).setOwner(&player); // redundant since the owner is set in setStructure()
         board.getIntersection(intersectionIndex).setStructure(Intersection::Structure::Settlement, player);
 
         std::cout << player.getName() << ", your settlement has been placed on intersection " << intersectionIndex << "." << std::endl;
@@ -296,19 +305,8 @@ namespace ariel {
     }
 
     void Catan::displayBoard() const {
-//        Board board = catanGame->getBoard();
-//        std::cout << "Board Status:" << std::endl;
-//        for (const auto& hexagon : board.getHexagons()) {
-//            std::cout << "Hexagon (" << hexagon.getX() << ", " << hexagon.getY() << ") - Type: " << hexagon.getType() << ", Number: " << hexagon.getNumber() << std::endl;
-//        }
-//        for (const auto& row : board.getIntersections()) {
-//            for (const auto& intersection : row) {
-//                std::cout << "Intersection " << intersection.getIndex() << " - Structure: " << intersection.getStructure() << ", Owner: " << (intersection.getOwner() ? intersection.getOwner()->getName() : "None") << std::endl;
-//            }
-//        }
-//        for (const auto& path : board.getPaths()) {
-//            std::cout << "Path " << path.getIndex() << " - Owner: " << (path.getOwner() ? path.getOwner()->getName() : "None") << std::endl;
-//        }
+        Intersection::showIntersections(board.getIntersections());
+        //display roads
     }
 
     void Catan::showPlayerCards(Player& player) const{
@@ -408,6 +406,7 @@ namespace ariel {
                 Intersection::Structure structure = intersection.getStructure();
                 Player* owner = intersection.getOwner();
                 if (owner != nullptr) {
+                    cout << owner->getName() << " owns " << structure << " at " << intersection.getIndex() << std::endl;
                     if (structure == Intersection::Structure::Settlement) {
                         takeCard(*owner, hexCard);
                     }

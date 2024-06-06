@@ -1,5 +1,6 @@
 #include "Intersection.hpp"
 #include "Hexagon.hpp"
+#include <iostream>
 
 using namespace ariel;
 
@@ -54,4 +55,17 @@ bool Intersection::isAdjacentTo(const Hexagon& hex) const {
         }
     }
     return false;
+}
+
+void Intersection::showIntersections(const std::vector<Intersection>& intersections) {
+    for (const auto& intersection : intersections) {
+        if (intersection.getStructure() != Structure::None) {
+            std::string structureName = (intersection.getStructure() == Structure::Settlement) ? "Settlement" : "City";
+            std::string ownerName = intersection.getOwner() ? intersection.getOwner()->getName() : "None";
+            std::cout << std::endl
+                      << "Intersection Index: " << intersection.getIndex()
+                      << ", Structure: " << structureName
+                      << ", Owner: " << ownerName << std::endl;
+        }
+    }
 }

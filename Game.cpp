@@ -93,7 +93,7 @@ namespace ariel {
     }
 
     void Game::buildMenu() {
-        std::cout << "Build Options: " << std::endl;
+        std::cout << std::endl << "Build Options: " << std::endl;
         std::cout << "1. Road" << std::endl;
         std::cout << "2. Settlement" << std::endl;
         std::cout << "3. City" << std::endl;
@@ -125,7 +125,7 @@ namespace ariel {
     }
 
     void Game::showStatus(){
-        std::cout << "Status Options: " << std::endl;
+        std::cout << std::endl << "Status Options: " << std::endl;
         std::cout << "1. Cards of player 1" << std::endl;
         std::cout << "2. Cards of player 2" << std::endl;
         std::cout << "3. Cards of player 3" << std::endl;

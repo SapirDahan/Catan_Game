@@ -201,7 +201,16 @@ namespace ariel {
 
         returnCard(player, CardType::Lumber, 1);
         returnCard(player, CardType::Brick, 1);
-        board.getPath(pathIndex).setOwner(&player);
+        if (player.getName() == player1.getName()){
+            board.getPath(pathIndex).setOwner(&player1);
+        }
+        if (player.getName() == player2.getName()){
+            board.getPath(pathIndex).setOwner(&player2);
+        }
+        if (player.getName() == player3.getName()){
+            board.getPath(pathIndex).setOwner(&player3);
+        }
+        //board.getPath(pathIndex).setOwner(&player);
         std::cout << player.getName() << ", your road has been placed on path " << pathIndex << "." << std::endl;
 
         return true;
@@ -239,6 +248,7 @@ namespace ariel {
 
         for (unsigned int i = 0; i < board.getPathAdjacenciesSize(); i++) {
             auto intersections = board.getPath(i).getIntersections();
+            //if ((board.getPath(i).getOwner()->getName() == &player.getName()) && ((intersections.first == intersectionIndex) || (intersections.second == intersectionIndex))) {
             if ((board.getPath(i).getOwner() == &player) && ((intersections.first == intersectionIndex) || (intersections.second == intersectionIndex))) {
                 hasAdjacentRoad = true;
                 break;
@@ -262,8 +272,16 @@ namespace ariel {
         returnCard(player, CardType::Brick, 1);
         returnCard(player, CardType::Wool, 1);
         returnCard(player, CardType::Grain, 1);
-        // board.getIntersection(intersectionIndex).setOwner(&player); // redundant since the owner is set in setStructure()
-        board.getIntersection(intersectionIndex).setStructure(Intersection::Structure::Settlement, player);
+        if (player.getName() == player1.getName()){
+            board.getIntersection(intersectionIndex).setStructure(Intersection::Structure::Settlement, player1);
+        }
+        if (player.getName() == player2.getName()){
+            board.getIntersection(intersectionIndex).setStructure(Intersection::Structure::Settlement, player2);
+        }
+        if (player.getName() == player3.getName()){
+            board.getIntersection(intersectionIndex).setStructure(Intersection::Structure::Settlement, player3);
+        }
+        //board.getIntersection(intersectionIndex).setStructure(Intersection::Structure::Settlement, player);
 
         std::cout << player.getName() << ", your settlement has been placed on intersection " << intersectionIndex << "." << std::endl;
         addPoints(player, 1);
@@ -305,8 +323,8 @@ namespace ariel {
     }
 
     void Catan::displayBoard() const {
-        Intersection::showIntersections(board.getIntersections());
-        //display roads
+        board.showIntersections();
+        board.showRoads();
     }
 
     void Catan::showPlayerCards(Player& player) const{

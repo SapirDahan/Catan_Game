@@ -84,3 +84,25 @@ const std::vector<Intersection>& Board::getIntersections() const {
 }
 
 
+void Board::showIntersections() const {
+    for (const auto& intersection : intersections) {
+        if (intersection.getStructure() != Intersection::Structure::None) {
+            std::string structureName = (intersection.getStructure() == Intersection::Structure::Settlement) ? "Settlement" : "City";
+            std::string ownerName = intersection.getOwner() ? intersection.getOwner()->getName() : "None";
+            std::cout << "Intersection Index: " << intersection.getIndex()
+                      << ", Structure: " << structureName
+                      << ", Owner: " << ownerName << std::endl;
+        }
+    }
+}
+
+
+void Board::showRoads() const {
+    for (const auto& path : paths) {
+        if (path.getOwner() != nullptr) {
+            std::string ownerName = path.getOwner()->getName();
+            std::cout << "Path Index: " << path.getIndex()
+                      << ", Owner: " << ownerName << std::endl;
+        }
+    }
+}

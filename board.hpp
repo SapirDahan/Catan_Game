@@ -27,6 +27,8 @@ namespace ariel {
         const std::vector<std::vector<std::pair<unsigned int, unsigned int>>> getIntersectionAdjacencies();
         const std::vector<Hexagon>& getHexagons() const;
         const std::vector<Intersection>& getIntersections() const;
+        void showIntersections() const;
+        void showRoads() const;
 
     private:
         std::vector<Hexagon> hexagons;

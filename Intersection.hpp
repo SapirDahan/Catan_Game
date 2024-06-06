@@ -20,7 +20,6 @@ namespace ariel {
         void addAdjacentHexagon(unsigned int hexagonX, unsigned int hexagonY);
         const std::vector<std::pair<unsigned int, unsigned int>> &getAdjacentHexagons() const;
         bool isAdjacentTo(const Hexagon& hex) const;
-        static void showIntersections(const std::vector<Intersection>& intersections);
 
     private:
         unsigned int index;

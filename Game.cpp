@@ -28,7 +28,7 @@ namespace ariel {
 
         while (true) {
             std::cout << std::endl;
-            std::cout << catanGame->checkTurn()->getName() << ", it's your turn." << std::endl;
+            std::cout << catanGame->checkTurn()->getName() << ", it's your turn." << std::endl << std::endl;
             std::cout << "Choose action: " << std::endl;
             std::cout << "1. Roll Dice" << std::endl;
             std::cout << "2. Build" << std::endl;
@@ -45,13 +45,13 @@ namespace ariel {
             switch (choice) {
                 case 1:
                     if(numOfRollingTheDice < 1){
-                        // Roll Dice logic here
-                        resultOfDice = catanGame->rollDices();
-                        std::cout << "Rolling dice... Result is: " << resultOfDice << std::endl;
                         numOfRollingTheDice++;
+                        resultOfDice = catanGame->rollDices();
+                        std::cout << std::endl << "Rolling dice... The result is: " << resultOfDice << std::endl;
+                        catanGame->distributeResources(resultOfDice);
                     }
                     else{
-                        std::cout << "You have already rolled the dices at this turn." << std::endl;
+                        std::cout << std::endl << "You have already rolled the dices at this turn." << std::endl;
                     }
 
                     break;
@@ -106,8 +106,7 @@ namespace ariel {
             case 1:
                 std::cout << "Enter path index to place road: ";
                 std::cin >> index;
-                //catanGame->placeRoad(catanGame->checkTurn(), index);
-
+                catanGame->placeRoad(*catanGame->checkTurn(), index);
                 break;
 
             case 2:

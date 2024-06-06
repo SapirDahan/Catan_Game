@@ -12,26 +12,22 @@
 #include "Hexagon.hpp"
 #include "Intersection.hpp"
 #include "Path.hpp"
+#include "CardType.hpp"
 
 namespace ariel {
     class Board {
     public:
         Board();
-
         Hexagon &getHexagon(unsigned int x, unsigned int y);
-
         Intersection &getIntersection(unsigned int index);
-
         Path &getPath(unsigned int index);
-
         unsigned int getIntersectionAdjacenciesSize();
         unsigned int getPathAdjacenciesSize();
         const std::vector<std::pair<unsigned int, unsigned int>>& getPathAdjacencies() const;
         const std::vector<std::vector<std::pair<unsigned int, unsigned int>>> getIntersectionAdjacencies();
+        const std::vector<Hexagon>& getHexagons() const;
+        const std::vector<Intersection>& getIntersections() const;
 //        unsigned int getIntersectionAdjacenciesByIndex(unsigned int index);
-
-
-
 
     private:
         std::vector<Hexagon> hexagons;
@@ -173,11 +169,11 @@ namespace ariel {
                                                                   {52, 53}};
     };
 
-    const std::vector<Hexagon::Type> HexagonTypes = {
-            Hexagon::Ore, Hexagon::Sheep, Hexagon::Wood, Hexagon::Wheat, Hexagon::Brick,
-            Hexagon::Sheep, Hexagon::Brick, Hexagon::Wheat, Hexagon::Wood, Hexagon::Desert,
-            Hexagon::Wood, Hexagon::Ore, Hexagon::Wood, Hexagon::Ore, Hexagon::Wheat,
-            Hexagon::Sheep, Hexagon::Brick, Hexagon::Wheat, Hexagon::Sheep
+    const std::vector<CardType> HexagonTypes = {
+            CardType::Ore, CardType::Wool, CardType::Lumber, CardType::Grain, CardType::Brick,
+            CardType::Wool, CardType::Brick, CardType::Grain, CardType::Lumber, CardType::Lumber, //Last one should have been Desert but there is no such CardType
+            CardType::Lumber, CardType::Ore, CardType::Lumber, CardType::Ore, CardType::Grain,
+            CardType::Wool, CardType::Brick, CardType::Grain, CardType::Wool
     };
 
     const std::vector<unsigned int> HexagonNumbers = {

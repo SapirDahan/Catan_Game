@@ -60,7 +60,7 @@ namespace ariel {
         std::string cardTypeToString(CardType cardType) const;
         void displayPoints();
         void addPoints(Player& player, unsigned int points);
-
+        void distributeResources(unsigned int diceResult);
 
 
         };

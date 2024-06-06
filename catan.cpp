@@ -1,4 +1,7 @@
 #include "catan.hpp"
+#include "Intersection.hpp"
+#include "Hexagon.hpp"
+#include "CardType.hpp"
 
 using namespace std;
 
@@ -142,7 +145,6 @@ namespace ariel {
             }
         }
 
-
         std::cout << "No card of type " << static_cast<int>(type) << " owned by " << player.getName() << " to return." << std::endl;
         return false;
     }
@@ -206,9 +208,6 @@ namespace ariel {
             return false;
         }
 
-        bool hasAdjacentRoad;
-        hasAdjacentRoad = false;
-
         for(const auto& path : board.getPathAdjacencies()){
             if(path.first == intersectionIndex){
                 if(board.getIntersection(path.second).getOwner() != nullptr){
@@ -226,11 +225,14 @@ namespace ariel {
             }
         }
 
+        bool hasAdjacentRoad;
+        hasAdjacentRoad = false;
+
         for (unsigned int i = 0; i < board.getPathAdjacenciesSize(); i++) {
             auto intersections = board.getPath(i).getIntersections();
             if ((board.getPath(i).getOwner() == &player) && ((intersections.first == intersectionIndex) || (intersections.second == intersectionIndex))) {
                 hasAdjacentRoad = true;
-                //break;
+                break;
             }
         }
         if (!hasAdjacentRoad) {
@@ -369,7 +371,52 @@ namespace ariel {
         if(player.getName() == player3.getName()){
             player3.addPoints(points);
         }
-
     }
 
+
+#include "catan.hpp"
+#include "Intersection.hpp"
+#include "Hexagon.hpp"
+
+    void Catan::distributeResources(unsigned int diceResult) {
+
+        CardType hexCard;
+
+        // Step 1: Identify all hexagons with the given dice result
+        std::vector<Hexagon> matchingHexagons;
+        for (const auto& hex : board.getHexagons()) {
+            if (hex.getNumber() == diceResult) {
+                matchingHexagons.push_back(hex);
+            }
+        }
+
+        // Step 2: Iterate through all intersections
+        for (const auto& intersection : board.getIntersections()) {
+            bool adjacentToMatchingHexagon = false;
+
+            // Check if the intersection is adjacent to any matching hexagon
+            for (const auto& hex : matchingHexagons) {
+                if (intersection.isAdjacentTo(hex)) {
+                    adjacentToMatchingHexagon = true;
+                    hexCard = hex.getType();
+                    break;
+                }
+            }
+
+            // Step 3: Allocate resources if the intersection is adjacent to a matching hexagon
+            if (adjacentToMatchingHexagon) {
+                Intersection::Structure structure = intersection.getStructure();
+                Player* owner = intersection.getOwner();
+                if (owner != nullptr) {
+                    if (structure == Intersection::Structure::Settlement) {
+                        takeCard(*owner, hexCard);
+                    }
+                    else if (structure == Intersection::Structure::City) {
+                        takeCard(*owner, hexCard);
+                        takeCard(*owner, hexCard);
+                    }
+                }
+            }
+        }
+    }
 }

@@ -5,18 +5,15 @@
  */
 
 #pragma once
+#include "CardType.hpp"
 
 namespace ariel {
 
     class Hexagon {
     public:
-        enum Type {
-            Wood, Brick, Sheep, Wheat, Ore, Desert
-        };
+        Hexagon(CardType type, unsigned int number, unsigned int x, unsigned int y);
 
-        Hexagon(Type type = Desert, unsigned int number = 0, unsigned int x = 0, unsigned int y = 0);
-
-        Type getType() const;
+        CardType getType() const;
 
         unsigned int getNumber() const;
 
@@ -25,7 +22,7 @@ namespace ariel {
         unsigned int getY() const;
 
     private:
-        Type type;
+        CardType type;
         unsigned int number;
         unsigned int x;
         unsigned int y;

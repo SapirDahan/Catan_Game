@@ -19,7 +19,6 @@ Board::Board() {
         intersections.emplace_back(Intersection(i));
     }
 
-
     initializeIntersections();
     initializePaths();
 }
@@ -74,6 +73,14 @@ const std::vector<std::pair<unsigned int, unsigned int>>& Board::getPathAdjacenc
 
 const std::vector<std::vector<std::pair<unsigned int, unsigned int>>> Board::getIntersectionAdjacencies(){
     return intersectionAdjacencies;
+}
+
+const std::vector<Hexagon>& Board::getHexagons() const {
+    return hexagons;
+}
+
+const std::vector<Intersection>& Board::getIntersections() const {
+    return intersections;
 }
 //unsigned int Board::getIntersectionAdjacenciesByIndex(unsigned int index){
 //    return intersectionAdjacencies[index];

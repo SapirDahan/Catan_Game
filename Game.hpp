@@ -14,6 +14,7 @@ namespace ariel {
         void start();
         void displayBoard() const;
         void setRoadsandSettlements();
+        void setRoadsandSettlements_auto(); // @@@ For debug purposes only
 
 
 

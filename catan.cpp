@@ -137,26 +137,48 @@ namespace ariel {
         return false;
     }
 
+//    bool Catan::returnCard(Player& player, CardType type, unsigned int amount) {
+//        unsigned int counter = 0;
+//        for (const auto& entry : cardOwnership) {
+//            unsigned int card = entry.first;
+//            if ((cards[card]->getType() == type) && (entry.second->getName() == player.getName())) {
+//                cardOwnership.erase(card);
+//                counter++;
+//            }
+//            if(counter == amount){
+//                cout << player.getName() << " has just returned " << amount << " " << cardTypeToString(type) << " card/s to the bank." << endl;
+//                return true;
+//            }
+//        }
+//        std::cout << "No card of type " << static_cast<int>(type) << " owned by " << player.getName() << " to return." << std::endl;
+//        return false;
+//    }
+
     bool Catan::returnCard(Player& player, CardType type, unsigned int amount) {
         unsigned int counter = 0;
+        std::vector<unsigned int> cardsToErase;
         for (const auto& entry : cardOwnership) {
             unsigned int card = entry.first;
-            Player* owner = entry.second;
-            if (cards[card]->getType() == type && owner->getName() == player.getName()) {
-
-                cardOwnership.erase(card);
+            if ((cards[card]->getType() == type) && (entry.second->getName() == player.getName())) {
+                cardsToErase.push_back(card);
                 counter++;
             }
-
-            if(counter == amount){
-                cout << player.getName() << " has just returned a " << cardTypeToString(type) << " card to the bank." << endl;
+            if(counter == amount) {
+                if (!cardsToErase.empty()) {
+                    for (unsigned int card: cardsToErase) {
+                        cardOwnership.erase(card);
+                    }
+                }
+                cout << player.getName() << " has just returned " << amount << " " << cardTypeToString(type)
+                     << " card/s to the bank." << endl;
                 return true;
             }
         }
-
-        std::cout << "No card of type " << static_cast<int>(type) << " owned by " << player.getName() << " to return." << std::endl;
+        cout << "No card of type " << cardTypeToString(type) << " owned by " << player.getName() << " found." << endl;
         return false;
     }
+
+
 
      unsigned int Catan::findAvailableCard(CardType type) {
         for (unsigned int i = 0; i < cards.size(); i++) {
@@ -170,8 +192,6 @@ namespace ariel {
     bool Catan::playerHasCards(Player& player, CardType type, unsigned int amount) const {
         unsigned int count = 0;
         for (const auto& entry : cardOwnership) {
-
-            //cout<<(entry.second->getName() == player.getName() )<< " " <<(cards[entry.first]->getType() == type) <<endl;
             if (entry.second->getName() == player.getName() && cards[entry.first]->getType() == type) {
                 count++;
                 if (count >= amount) {
@@ -248,8 +268,6 @@ namespace ariel {
 
         for (unsigned int i = 0; i < board.getPathAdjacenciesSize(); i++) {
             auto intersections = board.getPath(i).getIntersections();
-            //std::cout << player.getName() << std::endl;
-            //std::cout << board.getPath(i).getOwner()->getName() << std::endl;
             if ((board.getPath(i).getOwner() != nullptr) && (board.getPath(i).getOwner()->getName() == player.getName()) && ((intersections.first == intersectionIndex) || (intersections.second == intersectionIndex))) {
                 hasAdjacentRoad = true;
                 break;
@@ -312,10 +330,8 @@ namespace ariel {
             std::cout << "The player does not have the required resources (3 Ore and 2 Grain) to build a city." << std::endl;
             return false;
         }
-
         returnCard(player, CardType::Ore, 3);
         returnCard(player, CardType::Grain, 2);
-
         if (player.getName() == player1.getName()){
             board.getIntersection(intersectionIndex).setStructure(Intersection::Structure::City, player1);
         }
@@ -326,7 +342,7 @@ namespace ariel {
             board.getIntersection(intersectionIndex).setStructure(Intersection::Structure::City, player3);
         }
 
-        std::cout << "Your city has been placed." << std::endl;
+        std::cout << player.getName() << ", your city has been placed." << std::endl;
         addPoints(player, 1);
 
         return true;
@@ -435,7 +451,6 @@ namespace ariel {
                 Intersection::Structure structure = intersection.getStructure();
                 Player* owner = intersection.getOwner();
                 if (owner != nullptr) {
-                    cout << owner->getName() << " owns " << structure << " at " << intersection.getIndex() << std::endl;
                     if (structure == Intersection::Structure::Settlement) {
                         takeCard(*owner, hexCard);
                     }

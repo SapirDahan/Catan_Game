@@ -104,19 +104,23 @@ namespace ariel {
         switch (buildChoice) {
 
             case 1:
-                std::cout << "Enter path index to place road: ";
+                std::cout << std::endl << "Enter path index to place road: ";
                 std::cin >> index;
+                std::cout << std::endl;
                 catanGame->placeRoad(*catanGame->checkTurn(), index);
                 break;
 
             case 2:
-                std::cout << "Enter intersection index to place settlement: ";
+                std::cout << std::endl << "Enter intersection index to place settlement: ";
                 std::cin >> index;
+                std::cout << std::endl;
                 catanGame->placeSettlement(*catanGame->checkTurn(),index);
                 break;
+
             case 3:
-                std::cout << "Enter intersection index to place city: ";
+                std::cout << std::endl << "Enter intersection index to place city: ";
                 std::cin >> index;
+                std::cout << std::endl;
                 catanGame->placeCity(*catanGame->checkTurn(),index);
 
             default:
@@ -192,11 +196,39 @@ namespace ariel {
         std::cout << std::endl << "Initial placements is completed." << std::endl;
         std::cout << std::endl << "Let the game begin!" << std::endl;
     }
+
+    // @@@ For debug purposes only
+    void Game::setRoadsandSettlements_auto(){
+
+        catanGame->placeRoad(*catanGame->checkTurn(), 13);
+        catanGame->placeRoad(*catanGame->checkTurn(), 41);
+        catanGame->placeSettlement(*catanGame->checkTurn(), 10);
+        catanGame->placeSettlement(*catanGame->checkTurn(), 29);
+        catanGame->nextPlayer();
+
+        catanGame->placeRoad(*catanGame->checkTurn(), 56);
+        catanGame->placeRoad(*catanGame->checkTurn(), 52);
+        catanGame->placeSettlement(*catanGame->checkTurn(), 40);
+        catanGame->placeSettlement(*catanGame->checkTurn(), 44);
+        catanGame->nextPlayer();
+
+        catanGame->placeRoad(*catanGame->checkTurn(), 15);
+        catanGame->placeRoad(*catanGame->checkTurn(), 58);
+        catanGame->placeSettlement(*catanGame->checkTurn(), 13);
+        catanGame->placeSettlement(*catanGame->checkTurn(), 42);
+        catanGame->nextPlayer();
+
+        std::cout << std::endl << "Initial placements is completed." << std::endl;
+        std::cout << std::endl << "Let the game begin!" << std::endl;
+    }
+
 }
+
 
 int main() {
     ariel::Game game;
-    game.setRoadsandSettlements();
+    //game.setRoadsandSettlements();
+    game.setRoadsandSettlements_auto(); // @@ Debug
     game.start();
     return 0;
 }

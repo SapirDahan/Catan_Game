@@ -35,7 +35,7 @@ bool Intersection::setStructure(Structure newStructure, Player& player) {
             return true;
         }
     } else if (newStructure == City) {
-        if (structure == Settlement && this->owner->getName() == player.getName()) {
+        if (structure == Settlement) {
             structure = City;
             return true;
         }

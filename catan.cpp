@@ -43,6 +43,7 @@ namespace ariel {
         for (unsigned int i = 0; i < 2; ++i) {
             cards.push_back(std::make_shared<MonopolyCard>());
         }
+
         // Add Special Cards
         cards.push_back(std::make_shared<LargestArmyCard>());
 
@@ -137,22 +138,6 @@ namespace ariel {
         return false;
     }
 
-//    bool Catan::returnCard(Player& player, CardType type, unsigned int amount) {
-//        unsigned int counter = 0;
-//        for (const auto& entry : cardOwnership) {
-//            unsigned int card = entry.first;
-//            if ((cards[card]->getType() == type) && (entry.second->getName() == player.getName())) {
-//                cardOwnership.erase(card);
-//                counter++;
-//            }
-//            if(counter == amount){
-//                cout << player.getName() << " has just returned " << amount << " " << cardTypeToString(type) << " card/s to the bank." << endl;
-//                return true;
-//            }
-//        }
-//        std::cout << "No card of type " << static_cast<int>(type) << " owned by " << player.getName() << " to return." << std::endl;
-//        return false;
-//    }
 
     bool Catan::returnCard(Player& player, CardType type, unsigned int amount) {
         unsigned int counter = 0;
@@ -177,7 +162,6 @@ namespace ariel {
         cout << "No card of type " << cardTypeToString(type) << " owned by " << player.getName() << " found." << endl;
         return false;
     }
-
 
 
      unsigned int Catan::findAvailableCard(CardType type) {

@@ -83,7 +83,6 @@ namespace ariel {
                     break;
                 default:
                     std::cout << "Invalid choice. Please try again." << std::endl;
-
             }
 
             if(choice == 8){
@@ -122,6 +121,7 @@ namespace ariel {
                 std::cin >> index;
                 std::cout << std::endl;
                 catanGame->placeCity(*catanGame->checkTurn(),index);
+                break;
 
             default:
                 std::cout << "Invalid build choice. Please try again." << std::endl;
@@ -158,7 +158,7 @@ namespace ariel {
                 catanGame->displayPoints();
                 break;
             default:
-                break;
+                std::cout << "Invalid choice. Please try again." << std::endl;;
         }
     }
 

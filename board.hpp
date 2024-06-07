@@ -172,11 +172,14 @@ namespace ariel {
 
     const std::vector<CardType> HexagonTypes = {
             CardType::Ore, CardType::Wool, CardType::Lumber, CardType::Grain, CardType::Brick,
-            CardType::Wool, CardType::Brick, CardType::Grain, CardType::Lumber, CardType::Lumber, //Last one should have been Desert but there is no such CardType
+            CardType::Wool, CardType::Brick, CardType::Grain, CardType::Lumber,
+            CardType::Lumber, //Middle hexagon should have been Desert but there is no such CardType
             CardType::Lumber, CardType::Ore, CardType::Lumber, CardType::Ore, CardType::Grain,
             CardType::Wool, CardType::Brick, CardType::Grain, CardType::Wool
     };
 
     const std::vector<unsigned int> HexagonNumbers = {
-            10, 2, 9, 12, 6, 4, 10, 9, 11, 100, 3, 8, 8, 3, 4, 5, 5, 6, 11};
+            10, 2, 9, 12, 6, 4, 10, 9, 11,
+            1, //Middle hexagon should have been Desert but there is no such CardType, so it will never be equal to sum of dice
+            3, 8, 8, 3, 4, 5, 5, 6, 11};
 }

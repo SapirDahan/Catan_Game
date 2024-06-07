@@ -248,8 +248,9 @@ namespace ariel {
 
         for (unsigned int i = 0; i < board.getPathAdjacenciesSize(); i++) {
             auto intersections = board.getPath(i).getIntersections();
-            //if ((board.getPath(i).getOwner()->getName() == &player.getName()) && ((intersections.first == intersectionIndex) || (intersections.second == intersectionIndex))) {
-            if ((board.getPath(i).getOwner() == &player) && ((intersections.first == intersectionIndex) || (intersections.second == intersectionIndex))) {
+            //std::cout << player.getName() << std::endl;
+            //std::cout << board.getPath(i).getOwner()->getName() << std::endl;
+            if ((board.getPath(i).getOwner() != nullptr) && (board.getPath(i).getOwner()->getName() == player.getName()) && ((intersections.first == intersectionIndex) || (intersections.second == intersectionIndex))) {
                 hasAdjacentRoad = true;
                 break;
             }
@@ -281,7 +282,6 @@ namespace ariel {
         if (player.getName() == player3.getName()){
             board.getIntersection(intersectionIndex).setStructure(Intersection::Structure::Settlement, player3);
         }
-        //board.getIntersection(intersectionIndex).setStructure(Intersection::Structure::Settlement, player);
 
         std::cout << player.getName() << ", your settlement has been placed on intersection " << intersectionIndex << "." << std::endl;
         addPoints(player, 1);
@@ -296,7 +296,7 @@ namespace ariel {
             std::cout << "Intersection index is out of bound." << std::endl;
             return  false;
         }
-        if (board.getIntersection(intersectionIndex).getOwner()->getName() != player.getName()) {
+        if ((board.getIntersection(intersectionIndex).getOwner() != nullptr) &&  board.getIntersection(intersectionIndex).getOwner()->getName() != player.getName()) {
             std::cout << "This intersection is not owned by " << player.getName() << std::endl;
             return false;
         }
@@ -305,6 +305,7 @@ namespace ariel {
             std::cout << "Can't update to city because on the intersection there isn't a Settlement." << std::endl;
             return false;
         }
+
         if (!playerHasCards(player, CardType::Ore, 3) ||
             !playerHasCards(player, CardType::Grain, 2)) {
 
@@ -314,7 +315,17 @@ namespace ariel {
 
         returnCard(player, CardType::Ore, 3);
         returnCard(player, CardType::Grain, 2);
-        board.getIntersection(intersectionIndex).setStructure(Intersection::Structure::City, player);
+
+        if (player.getName() == player1.getName()){
+            board.getIntersection(intersectionIndex).setStructure(Intersection::Structure::City, player1);
+        }
+        if (player.getName() == player2.getName()){
+            board.getIntersection(intersectionIndex).setStructure(Intersection::Structure::City, player2);
+        }
+        if (player.getName() == player3.getName()){
+            board.getIntersection(intersectionIndex).setStructure(Intersection::Structure::City, player3);
+        }
+
         std::cout << "Your city has been placed." << std::endl;
         addPoints(player, 1);
 

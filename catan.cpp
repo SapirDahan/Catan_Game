@@ -2,6 +2,7 @@
 #include "Intersection.hpp"
 #include "Hexagon.hpp"
 #include "CardType.hpp"
+#include <numeric>
 
 using namespace std;
 
@@ -131,7 +132,7 @@ namespace ariel {
             if (player.getName() == player3.getName()) {
                 cardOwnership[cardNumber] = &player3;
             }
-            std::cout << "Card of type " << cardTypeToString(type) << " handed to " << player.getName() << std::endl; // Debug statement
+            std::cout << "Card of type " << cardTypeToString(type) << " handed to " << player.getName() << std::endl;
             return true;
         }
         std::cout << "Card of type " << cardTypeToString(type) << " is not available." << std::endl;
@@ -446,4 +447,147 @@ namespace ariel {
             }
         }
     }
+
+    bool Catan::buyDevCard(Player& player) {
+
+        // Check if the player has the relevant resource cards to by a development card
+        if (!playerHasCards(player, CardType::Ore, 1) ||
+            !playerHasCards(player, CardType::Grain, 1) ||
+            !playerHasCards(player, CardType::Wool, 1)) {
+
+            std::cout << "The player does not have the required resources (1 Ore, 1 Grain and 1 Wool) to buy a development card." << std::endl;
+            return false;
+        }
+
+        std::vector<unsigned int> devCardTypeCounter(5, 0);
+
+        for (unsigned int i = 0; i < cards.size(); i++) {
+            if (cardOwnership.find(i) == cardOwnership.end()) {
+                if (cards[i]->getType() == CardType::Knight){
+                    devCardTypeCounter[0] += 1;
+                }
+                if (cards[i]->getType() == CardType::VictoryPoint){
+                    devCardTypeCounter[1] += 1;
+                }
+                if (cards[i]->getType() == CardType::RoadBuilding){
+                    devCardTypeCounter[2] += 1;
+                }
+                if (cards[i]->getType() == CardType::YearOfPlenty){
+                    devCardTypeCounter[3] += 1;
+                }
+                if (cards[i]->getType() == CardType::Monopoly){
+                    devCardTypeCounter[4] += 1;
+                }
+            }
+        }
+        unsigned int sumOfDevCards = static_cast<unsigned int>(std::accumulate(devCardTypeCounter.begin(), devCardTypeCounter.end(), 0));
+        if (sumOfDevCards == 0){
+            std::cout << "\nThere are no further development cards in the pack." << endl;
+            return false;
+        }
+
+        // Return cards to the bank
+        returnCard(player, CardType::Ore, 1);
+        returnCard(player, CardType::Grain, 1);
+        returnCard(player, CardType::Wool, 1);
+
+        unsigned int index;
+
+        // Generate a random number between 1 and sumOfDevCards
+        int randNum = rand() % static_cast<int>(sumOfDevCards) + 1;
+
+        // Find the corresponding card type
+        int cumulativeSum = 0;
+        for (unsigned int i = 0; i < devCardTypeCounter.size(); ++i) {
+            cumulativeSum += devCardTypeCounter[i];
+            if (randNum <= cumulativeSum) {
+                index = i;
+                break;
+            }
+        }
+
+        // take a development Card
+        if(index == 0){
+            takeCard(player, CardType::Knight);
+            if(player.getName() == player1.getName()){
+                player1.addKnights(1);
+            }
+            if(player.getName() == player2.getName()){
+                player2.addKnights(1);
+            }
+            if(player.getName() == player3.getName()){
+                player3.addKnights(1);
+            }
+            manageLargestArmyCard(); // Manage the Largest Army Card logic and prints status
+        }
+        if(index == 1){
+            takeCard(player, CardType::VictoryPoint);
+        }
+        if(index == 2){
+            takeCard(player, CardType::RoadBuilding);
+        }
+        if(index == 3){
+            takeCard(player, CardType::YearOfPlenty);
+        }
+        if(index == 4){
+            takeCard(player, CardType::Monopoly);
+        }
+
+        return true;
+    }
+
+    void Catan::manageLargestArmyCard(){
+        // Check eligibility for largest army
+
+        Player* playerWithMostKnights = nullptr;
+        unsigned int maxKnights = 3;  // Must have more than 3 Knight cards
+
+        if (player1.getKnights() > maxKnights) {
+            maxKnights = player1.getKnights();
+            playerWithMostKnights = &player1;
+        }
+
+        if (player2.getKnights() > maxKnights) {
+            maxKnights = player2.getKnights();
+            playerWithMostKnights = &player2;
+        }
+
+        if (player3.getKnights() > maxKnights) {
+            maxKnights = player3.getKnights();
+            playerWithMostKnights = &player3;
+        }
+
+
+        // The previous player returns the card
+        if (playerHasCards(player1, CardType::LargestArmy, 1)){
+            returnCard(player1, CardType::LargestArmy, 1);
+            player1.reducePoints(2);
+        }
+        if (playerHasCards(player2, CardType::LargestArmy, 1)){
+            returnCard(player2, CardType::LargestArmy, 1);
+            player2.reducePoints(2);
+        }
+        if (playerHasCards(player3, CardType::LargestArmy, 1)){
+            returnCard(player3, CardType::LargestArmy, 1);
+            player3.reducePoints(2);
+        }
+
+        // Add two victory points and grant the Largest Army Card
+
+        if (playerWithMostKnights->getName() == player1.getName()){
+            takeCard(player1, CardType::LargestArmy);
+            player1.addPoints(2);
+        }
+        if (playerWithMostKnights->getName() == player2.getName()){
+            takeCard(player2, CardType::LargestArmy);
+            player2.addPoints(2);
+        }
+        if (playerWithMostKnights->getName() == player3.getName()){
+            takeCard(player3, CardType::LargestArmy);
+            player3.addPoints(2);
+        }
+
+    }
+
+
 }

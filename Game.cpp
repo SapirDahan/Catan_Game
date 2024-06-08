@@ -63,8 +63,7 @@ namespace ariel {
                     std::cout << "Trading... (not implemented yet)" << std::endl;
                     break;
                 case 4:
-                    // Buy Development Card logic here
-                    std::cout << "Buying development card... (not implemented yet)" << std::endl;
+                    catanGame->buyDevCard(*catanGame->checkTurn());
                     break;
                 case 5:
                     // Play Development Card logic here

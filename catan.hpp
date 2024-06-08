@@ -49,19 +49,17 @@ namespace ariel {
         bool takeCard(Player& player, CardType type);
         bool returnCard(Player& player, CardType type, unsigned int amount);
         bool playerHasCards(Player& player, CardType type, unsigned int amount) const;
-
         bool placeRoad(Player& player, unsigned int pathIndex);
         bool placeSettlement(Player& player, unsigned int intersectionIndex);
         bool placeCity(Player& player, unsigned int intersectionIndex);
-
         void displayBoard() const;
         void showPlayerCards(Player& player) const;
-
         std::string cardTypeToString(CardType cardType) const;
         void displayPoints();
         void addPoints(Player& player, unsigned int points);
         void distributeResources(unsigned int diceResult);
-
+        bool buyDevCard(Player& player);
+        void manageLargestArmyCard();
 
         };
 }

@@ -26,6 +26,11 @@ namespace ariel {
         unsigned int resultOfDice;
         unsigned int numOfRollingTheDice = 0;
 
+        // Distribute resources from adjacent hexagons to all players
+        for(unsigned int i=2; i<=12; i++) {
+            catanGame->distributeResources(i);
+        }
+
         while (true) {
             std::cout << std::endl;
             std::cout << catanGame->checkTurn()->getName() << ", it's your turn." << std::endl << std::endl;
@@ -34,10 +39,9 @@ namespace ariel {
             std::cout << "2. Build" << std::endl;
             std::cout << "3. Trade" << std::endl;
             std::cout << "4. Buy Development Card" << std::endl;
-            std::cout << "5. Play Development Card" << std::endl;
-            std::cout << "6. Show status" << std::endl;
-            std::cout << "7. End Turn" << std::endl;
-            std::cout << "8. End the Game" << std::endl;
+            std::cout << "5. Show status" << std::endl;
+            std::cout << "6. End Turn" << std::endl;
+            std::cout << "7. End the Game" << std::endl;
 
             int choice;
             std::cin >> choice;
@@ -53,39 +57,32 @@ namespace ariel {
                     else{
                         std::cout << std::endl << "You have already rolled the dices at this turn." << std::endl;
                     }
-
+                    if(resultOfDice == 7){
+                        catanGame->handleSeven();
+                    }
                     break;
                 case 2:
                     buildMenu();
                     break;
                 case 3:
-                    // Trade logic here
-                    std::cout << "Trading... (not implemented yet)" << std::endl;
+                    catanGame->tradeCards(*catanGame->checkTurn());
                     break;
                 case 4:
                     catanGame->buyDevCard(*catanGame->checkTurn());
                     break;
                 case 5:
-                    // Play Development Card logic here
-                    std::cout << "Playing development card... (not implemented yet)" << std::endl;
-                    break;
-                case 6:
                     showStatus();
                     break;
-                case 7:
+                case 6:
                     catanGame->nextPlayer();
                     numOfRollingTheDice = 0;
                     break;
-                case 8:
-                    // check i someone won
+                case 7:
                     cout << "Existing the game" << endl;
+                    exit(EXIT_SUCCESS);
                     break;
                 default:
                     std::cout << "Invalid choice. Please try again." << std::endl;
-            }
-
-            if(choice == 8){
-                break;
             }
         }
     }
@@ -203,12 +200,22 @@ namespace ariel {
         catanGame->placeRoad(*catanGame->checkTurn(), 41);
         catanGame->placeSettlement(*catanGame->checkTurn(), 10);
         catanGame->placeSettlement(*catanGame->checkTurn(), 29);
+//        for(int i=1 ; i<=15 ; i++){
+//            catanGame->takeCard(*catanGame->checkTurn(), CardType::Ore);
+//            catanGame->takeCard(*catanGame->checkTurn(), CardType::Wool);
+//            catanGame->takeCard(*catanGame->checkTurn(), CardType::Grain);
+//        }
         catanGame->nextPlayer();
 
         catanGame->placeRoad(*catanGame->checkTurn(), 56);
         catanGame->placeRoad(*catanGame->checkTurn(), 52);
         catanGame->placeSettlement(*catanGame->checkTurn(), 40);
         catanGame->placeSettlement(*catanGame->checkTurn(), 44);
+//        for(int i=1 ; i<=3 ; i++){
+//            catanGame->takeCard(*catanGame->checkTurn(), CardType::Ore);
+//            catanGame->takeCard(*catanGame->checkTurn(), CardType::Wool);
+//            catanGame->takeCard(*catanGame->checkTurn(), CardType::Grain);
+//        }
         catanGame->nextPlayer();
 
         catanGame->placeRoad(*catanGame->checkTurn(), 15);

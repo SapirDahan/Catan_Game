@@ -55,30 +55,18 @@ namespace ariel {
         cout  << std::endl << "The starting player is: " << turn.getName() << "!" << endl;
     }
 
-//    void Catan::printWinner() const{
-//        if(player1.getPoints() >= 10){
-//            cout << player1.getName() << " is the winner!!!" << endl;
-//        }
-//
-//        else if(player2.getPoints() >= 10){
-//            cout << player2.getName() << " is the winner!!!" << endl;
-//        }
-//
-//        else if(player3.getPoints() >= 10){
-//            cout << player3.getName() << " is the winner!!!" << endl;
-//        }
-//
-//        else{
-//            cout << "The still go on!" << endl;
-//        }
-//
-//    }
 
     Board Catan::getBoard() const{
         return board;
     }
 
     Player Catan::nextPlayer(){
+        if(turn.getPoints()>=10){
+            std::cout << std::endl << turn.getName() << " is the winner with " << turn.getPoints() << " victory points!!" << std::endl;
+            std::cout << std::endl << "GAME OVER!" << std::endl;
+            exit(EXIT_SUCCESS);
+        }
+
         if(turn.getName() == player1.getName()){
             turn = player2;
             return player2;
@@ -132,7 +120,7 @@ namespace ariel {
             if (player.getName() == player3.getName()) {
                 cardOwnership[cardNumber] = &player3;
             }
-            std::cout << "Card of type " << cardTypeToString(type) << " handed to " << player.getName() << std::endl;
+            std::cout << "Card of type " << cardTypeToString(type) << " handed to " << player.getName() << "." << std::endl;
             return true;
         }
         std::cout << "Card of type " << cardTypeToString(type) << " is not available." << std::endl;
@@ -155,8 +143,10 @@ namespace ariel {
                         cardOwnership.erase(card);
                     }
                 }
-                cout << player.getName() << " has just returned " << amount << " " << cardTypeToString(type)
-                     << " card/s to the bank." << endl;
+                if (type != CardType::LargestArmy){
+                    cout << player.getName() << " has just returned " << amount << " " << cardTypeToString(type)
+                         << " card/s to the bank." << endl;
+                }
                 return true;
             }
         }
@@ -522,16 +512,33 @@ namespace ariel {
         }
         if(index == 1){
             takeCard(player, CardType::VictoryPoint);
+            if(player.getName() == player1.getName()){
+                addPoints(player1,1);
+            }
+            if(player.getName() == player2.getName()){
+                addPoints(player2,1);
+            }
+            if(player.getName() == player3.getName()){
+                addPoints(player3,1);
+            }
         }
         if(index == 2){
             takeCard(player, CardType::RoadBuilding);
+            takeCard(player, CardType::Brick);
+            takeCard(player, CardType::Brick);
+            takeCard(player, CardType::Lumber);
+            takeCard(player, CardType::Lumber);
         }
         if(index == 3){
             takeCard(player, CardType::YearOfPlenty);
+            playYearOfPlentyCard();
+            playYearOfPlentyCard();
         }
         if(index == 4){
             takeCard(player, CardType::Monopoly);
+            playMonopolyCard();
         }
+        nextPlayer(); // Next player turn
 
         return true;
     }
@@ -542,21 +549,19 @@ namespace ariel {
         Player* playerWithMostKnights = nullptr;
         unsigned int maxKnights = 3;  // Must have more than 3 Knight cards
 
-        if (player1.getKnights() > maxKnights) {
+        if (player1.getKnights() >= maxKnights) {
             maxKnights = player1.getKnights();
             playerWithMostKnights = &player1;
         }
 
-        if (player2.getKnights() > maxKnights) {
+        if (player2.getKnights() >= maxKnights) {
             maxKnights = player2.getKnights();
             playerWithMostKnights = &player2;
         }
 
-        if (player3.getKnights() > maxKnights) {
-            maxKnights = player3.getKnights();
+        if (player3.getKnights() >= maxKnights) {
             playerWithMostKnights = &player3;
         }
-
 
         // The previous player returns the card
         if (playerHasCards(player1, CardType::LargestArmy, 1)){
@@ -573,21 +578,271 @@ namespace ariel {
         }
 
         // Add two victory points and grant the Largest Army Card
-
-        if (playerWithMostKnights->getName() == player1.getName()){
-            takeCard(player1, CardType::LargestArmy);
-            player1.addPoints(2);
+        if (playerWithMostKnights != nullptr){
+            if (playerWithMostKnights->getName() == player1.getName()){
+                takeCard(player1, CardType::LargestArmy);
+                player1.addPoints(2);
+            }
+            if (playerWithMostKnights->getName() == player2.getName()){
+                takeCard(player2, CardType::LargestArmy);
+                player2.addPoints(2);
+            }
+            if (playerWithMostKnights->getName() == player3.getName()){
+                takeCard(player3, CardType::LargestArmy);
+                player3.addPoints(2);
+            }
         }
-        if (playerWithMostKnights->getName() == player2.getName()){
-            takeCard(player2, CardType::LargestArmy);
-            player2.addPoints(2);
-        }
-        if (playerWithMostKnights->getName() == player3.getName()){
-            takeCard(player3, CardType::LargestArmy);
-            player3.addPoints(2);
-        }
-
     }
+
+
+    void Catan::playMonopolyCard() {
+        while (true) {
+            std::cout << std::endl;
+            std::cout << turn.getName() << ", please choose a resource for your monopoly." << std::endl
+                      << std::endl;
+            std::cout << "Choose resource: " << std::endl;
+            std::cout << "1. Lumber" << std::endl;
+            std::cout << "2. Brick" << std::endl;
+            std::cout << "3. Wool" << std::endl;
+            std::cout << "4. Grain" << std::endl;
+            std::cout << "5. Ore" << std::endl;
+            int choice;
+            std::cin >> choice;
+
+            switch (choice) {
+                case 1:
+                    takeMonopoly(turn, CardType::Lumber);
+                    break;
+                case 2:
+                    takeMonopoly(turn, CardType::Brick);
+                    break;
+                case 3:
+                    takeMonopoly(turn, CardType::Wool);
+                    break;
+                case 4:
+                    takeMonopoly(turn, CardType::Grain);
+                    break;
+                case 5:
+                    takeMonopoly(turn, CardType::Ore);
+                    break;
+                default:
+                    std::cout << "Invalid choice. Please try again." << std::endl;
+            }
+            if (choice <= 5) {
+                break;
+            }
+        }
+    }
+
+
+    void Catan::takeMonopoly(Player& player, CardType type){
+        for (auto& entry : cardOwnership) {
+            unsigned int cardId = entry.first;
+            auto card = cards[cardId];
+            if (card->getType() == type) {
+                entry.second = &player;
+            }
+        }
+        returnCard(player, CardType::Monopoly, 1);
+    }
+
+    void Catan::playYearOfPlentyCard() {
+        while (true) {
+            std::cout << std::endl;
+            std::cout << turn.getName() << ", please choose a resource for your monopoly." << std::endl
+                      << std::endl;
+            std::cout << "Choose resource: " << std::endl;
+            std::cout << "1. Lumber" << std::endl;
+            std::cout << "2. Brick" << std::endl;
+            std::cout << "3. Wool" << std::endl;
+            std::cout << "4. Grain" << std::endl;
+            std::cout << "5. Ore" << std::endl;
+            int choice;
+            std::cin >> choice;
+
+            switch (choice) {
+                case 1:
+                    takeCard(turn, CardType::Lumber);
+                    break;
+                case 2:
+                    takeCard(turn, CardType::Brick);
+                    break;
+                case 3:
+                    takeCard(turn, CardType::Wool);
+                    break;
+                case 4:
+                    takeCard(turn, CardType::Grain);
+                    break;
+                case 5:
+                    takeCard(turn, CardType::Ore);
+                    break;
+                default:
+                    std::cout << "Invalid choice. Please try again." << std::endl;
+            }
+            if (choice <= 5) {
+                break;
+            }
+        }
+    }
+
+    unsigned int Catan::countPlayerResourceCards(Player& player) const{
+
+        unsigned int totalCards;
+
+        totalCards = 0;
+        for (const auto& entry : cardOwnership) {
+            CardType cardType = cards.at(entry.first)->getType();
+            if (entry.second->getName() == player.getName() && isResourceCard(cardType)) {
+                totalCards++;
+            }
+        }
+        return totalCards;
+    }
+
+   bool Catan::isResourceCard(CardType type) const{
+        if (type == CardType::Lumber || type == CardType::Brick || type == CardType::Grain || type == CardType::Wool || type == CardType::Ore){
+            return true;
+        }
+       return false;
+    }
+
+    void Catan::handleSeven(){
+        unsigned int numOfResourceCardsforPlayer1 = countPlayerResourceCards(player1);
+        if(numOfResourceCardsforPlayer1 > 7){
+            unsigned int numOfCardsToReturn = numOfResourceCardsforPlayer1 / 2;
+            for(unsigned int i=0; i<numOfCardsToReturn ; i++){
+                menuForDiceSeven(player1);
+            }
+        }
+        unsigned int numOfResourceCardsforPlayer2 = countPlayerResourceCards(player2);
+        if(numOfResourceCardsforPlayer2 > 7){
+            unsigned int numOfCardsToReturn = numOfResourceCardsforPlayer2 / 2;
+            for(unsigned int i=0; i<numOfCardsToReturn ; i++){
+                menuForDiceSeven(player2);
+            }
+        }
+        unsigned int numOfResourceCardsforPlayer3 = countPlayerResourceCards(player3);
+        if(numOfResourceCardsforPlayer3 > 7){
+            unsigned int numOfCardsToReturn = numOfResourceCardsforPlayer3 / 2;
+            for(unsigned int i=0; i<numOfCardsToReturn ; i++){
+                menuForDiceSeven(player3);
+            }
+        }
+        std::cout << "\nDice 7 handling has been completed.\n" << std::endl;
+    }
+
+
+    void Catan::menuForDiceSeven(Player& player) {
+        bool returnSuccess;
+        while (true) {
+            std::cout << std::endl;
+            std::cout << player.getName() << ", please choose a resource to return to the bank." << std::endl
+                      << std::endl;
+            std::cout << "Choose resource: " << std::endl;
+            std::cout << "1. Lumber" << std::endl;
+            std::cout << "2. Brick" << std::endl;
+            std::cout << "3. Wool" << std::endl;
+            std::cout << "4. Grain" << std::endl;
+            std::cout << "5. Ore" << std::endl;
+            int choice;
+            std::cin >> choice;
+
+            switch (choice) {
+                case 1:
+                    returnSuccess = returnCard(player, CardType::Lumber, 1);
+                    break;
+                case 2:
+                    returnSuccess = returnCard(player, CardType::Brick,1);
+                    break;
+                case 3:
+                    returnSuccess = returnCard(player, CardType::Wool,1);
+                    break;
+                case 4:
+                    returnSuccess = returnCard(player, CardType::Grain,1);
+                    break;
+                case 5:
+                    returnSuccess = returnCard(player, CardType::Ore,1);
+                    break;
+                default:
+                    std::cout << "Invalid choice. Please try again." << std::endl;
+            }
+            if (choice <= 5 && returnSuccess) {
+                break;
+            }
+        }
+    }
+
+
+    void Catan::tradeCards(Player &player) {
+        std::vector<Player*> playerSelection = {&player1, &player2, &player3};
+        CardType giveResource, getResource;
+        unsigned int giveAmount, getAmount;
+        unsigned int choice;
+
+        // Menu to select resource type to give
+        std::cout << "Select the resource you want to give: (1: Lumber, 2: Brick, 3: Wool, 4: Grain, 5: Ore): ";
+        unsigned int giveResourceChoice;
+        std::cin >> giveResourceChoice;
+        giveResource = static_cast<CardType>(giveResourceChoice - 1);
+
+        std::cout << "Enter the amount you want to give: ";
+        std::cin >> giveAmount;
+
+        // Check if the player has enough resources to give
+        if (!playerHasCards(player, giveResource, giveAmount)) {
+            std::cout << "You don't have enough of the selected resource to give.\n";
+            return;
+        }
+
+        // Menu to select resource type to get
+        std::cout << "Select the resource you want to get (1: Lumber, 2: Brick, 3: Wool, 4: Grain, 5: Ore): ";
+        int getResourceChoice;
+        std::cin >> getResourceChoice;
+        getResource = static_cast<CardType>(getResourceChoice - 1);
+
+        std::cout << "Enter the amount you want to get: ";
+        std::cin >> getAmount;
+
+        // Menu to select another player or reject the trade
+        std::cout << "Select a player to trade with or reject the trade:\n";
+        for (size_t i = 0; i < playerSelection.size(); ++i) {
+            std::cout << i + 1 << ". " << playerSelection[i]->getName() << "\n";
+        }
+        std::cout << playerSelection.size() + 1 << ". Reject trade\n";
+        std::cin >> choice;
+        std::cout << std::endl;
+
+        if (choice > 0 && choice <= playerSelection.size()) {
+            if (choice == playerSelection.size() + 1) {
+                std::cout << "Trade rejected.\n";
+                return;
+            }
+
+            Player &otherPlayer = *playerSelection[choice - 1];
+
+            // Check if the other player has enough resources to get
+            if (!playerHasCards(otherPlayer, getResource, getAmount)) {
+                std::cout << otherPlayer.getName() << " doesn't have enough of the selected resource to give.\n";
+                return;
+            }
+
+            // First, return the cards
+            returnCard(otherPlayer, getResource, getAmount);
+            returnCard(player, giveResource, giveAmount);
+
+            // Then, take the cards
+            for(unsigned int i=0 ; i<giveAmount ; i++){
+                takeCard(otherPlayer, giveResource);
+            }
+            for(unsigned int i=0 ; i<getAmount ; i++) {
+                takeCard(player, getResource);
+            }
+            std::cout << "Trade completed successfully!\n";
+        } else {
+            std::cout << "Trade rejected.\n";
+        }
+    }
+
 
 
 }

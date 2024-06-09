@@ -60,6 +60,14 @@ namespace ariel {
         void distributeResources(unsigned int diceResult);
         bool buyDevCard(Player& player);
         void manageLargestArmyCard();
+        void playMonopolyCard();
+        void takeMonopoly(Player& player, CardType type);
+        void playYearOfPlentyCard();
+        bool isResourceCard(CardType type) const;
+        void handleSeven();
+        unsigned int countPlayerResourceCards(Player& player) const;
+        void menuForDiceSeven(Player& player);
+        void tradeCards(Player &player);
 
-        };
+    };
 }

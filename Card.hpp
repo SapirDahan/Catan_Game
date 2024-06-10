@@ -1,4 +1,4 @@
-# pragma once
+#pragma once
 
 #include "player.hpp"
 #include "CardType.hpp"
@@ -6,16 +6,21 @@
 
 namespace ariel {
 
+    /**
+     * @brief Abstract class representing a card in the game.
+     */
     class Card {
     public:
         virtual ~Card() = default; // Virtual destructor for polymorphic cleanup
-        virtual CardType getType() const = 0;
-        void setHolder(Player* holder);
-        Player* getHolder() const;
 
-    private:
-        Player* holder = nullptr;
+        /**
+         * @brief Get the type of the card.
+         *
+         * This function is pure virtual and must be implemented by derived classes.
+         *
+         * @return CardType The type of the card.
+         */
+        virtual CardType getType() const = 0;
     };
 
 }
-

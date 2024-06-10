@@ -17,17 +17,91 @@
 namespace ariel {
     class Board {
     public:
+
+        // Constructor
         Board();
+
+        // Destructor
+        ~Board();
+
+        /**
+         * @brief Get the Hexagon object at the specified coordinates.
+         *
+         * @param x The x-coordinate of the hexagon.
+         * @param y The y-coordinate of the hexagon.
+         * @return Hexagon& A reference to the hexagon at the specified coordinates.
+         * @throws std::invalid_argument if the hexagon is not found.
+         */
         Hexagon &getHexagon(unsigned int x, unsigned int y);
+
+        /**
+         * @brief Get the Intersection object at the specified index.
+         *
+         * @param index The index of the intersection.
+         * @return Intersection& A reference to the intersection at the specified index.
+         * @throws std::invalid_argument if the intersection index is out of range.
+         */
         Intersection &getIntersection(unsigned int index);
+
+        /**
+         * @brief Get the Path object at the specified index.
+         *
+         * @param index The index of the path.
+         * @return Path& A reference to the path at the specified index.
+         * @throws std::invalid_argument if the path index is out of range.
+         */
         Path &getPath(unsigned int index);
+
+        /**
+         * @brief Get the number of intersection adjacencies.
+         *
+         * @return unsigned int The number of intersection adjacencies.
+         */
         unsigned int getIntersectionAdjacenciesSize();
+
+        /**
+         * @brief Get the number of path adjacencies.
+         *
+         * @return unsigned int The number of path adjacencies.
+         */
         unsigned int getPathAdjacenciesSize();
+
+        /**
+         * @brief Get the path adjacencies.
+         *
+         * @return const std::vector<std::pair<unsigned int, unsigned int>>& A reference to the vector of path adjacencies.
+         */
         const std::vector<std::pair<unsigned int, unsigned int>>& getPathAdjacencies() const;
+
+        /**
+         * @brief Get the intersection adjacencies.
+         *
+         * @return const std::vector<std::vector<std::pair<unsigned int, unsigned int>>> A vector of vectors containing pairs of unsigned integers representing intersection adjacencies.
+         */
         const std::vector<std::vector<std::pair<unsigned int, unsigned int>>> getIntersectionAdjacencies();
+
+        /**
+         * @brief Get the hexagons.
+         *
+         * @return const std::vector<Hexagon>& A reference to the vector of hexagons.
+         */
         const std::vector<Hexagon>& getHexagons() const;
+
+        /**
+         * @brief Get the intersections.
+         *
+         * @return const std::vector<Intersection>& A reference to the vector of intersections.
+         */
         const std::vector<Intersection>& getIntersections() const;
+
+        /**
+         * @brief Display the intersections on the board.
+         */
         void showIntersections() const;
+
+        /**
+         * @brief Display the roads on the board.
+         */
         void showRoads() const;
 
     private:
@@ -35,8 +109,14 @@ namespace ariel {
         std::vector<Intersection> intersections;
         std::vector<Path> paths;
 
+        /**
+         * @brief Initialize the intersections based on adjacencies.
+         */
         void initializeIntersections();
 
+        /**
+         * @brief Initialize the paths based on adjacencies.
+         */
         void initializePaths();
 
         // Define intersection adjacencies
@@ -170,6 +250,7 @@ namespace ariel {
                                                                   {52, 53}};
     };
 
+    // The board hexagon types
     const std::vector<CardType> HexagonTypes = {
             CardType::Ore, CardType::Wool, CardType::Lumber, CardType::Grain, CardType::Brick,
             CardType::Wool, CardType::Brick, CardType::Grain, CardType::Lumber,
@@ -178,6 +259,7 @@ namespace ariel {
             CardType::Wool, CardType::Brick, CardType::Grain, CardType::Wool
     };
 
+    // The board hexagon numbers
     const std::vector<unsigned int> HexagonNumbers = {
             10, 2, 9, 12, 6, 4, 10, 9, 11,
             1, //Middle hexagon should have been Desert but there is no such CardType, so it will never be equal to sum of dice

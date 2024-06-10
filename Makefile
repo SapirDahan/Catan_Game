@@ -10,19 +10,19 @@ CXX=g++
 CXXFLAGS=-std=c++11 -Werror -Wsign-conversion
 VALGRIND_FLAGS=-v --leak-check=full --show-leak-kinds=all  --error-exitcode=99
 
-SOURCES=board.cpp catan.cpp player.cpp Hexagon.cpp Intersection.cpp Path.cpp Dice.cpp Card.cpp DevelopmentCard.cpp ResourceCard.cpp SpecialCard.cpp TestCounter.cpp Tests.cpp
+SOURCES=board.cpp catan.cpp player.cpp Hexagon.cpp Intersection.cpp Path.cpp Dice.cpp DevelopmentCard.cpp ResourceCard.cpp SpecialCard.cpp TestCounter.cpp Tests.cpp
 OBJECTS=$(subst .cpp,.o,$(SOURCES))
 
 run: demo
 	./$^
 
-demo: Demo.o board.o catan.o ResourceCard.o player.o Hexagon.o Intersection.o Path.o Dice.o Card.o DevelopmentCard.o SpecialCard.o
+demo: Demo.o board.o catan.o ResourceCard.o player.o Hexagon.o Intersection.o Path.o Dice.o DevelopmentCard.o SpecialCard.o
 	$(CXX) $(CXXFLAGS) $^ -o demo
 
-catan: Game.o board.o catan.o ResourceCard.o player.o Hexagon.o Intersection.o Path.o Dice.o Card.o DevelopmentCard.o SpecialCard.o
+catan: Game.o board.o catan.o ResourceCard.o player.o Hexagon.o Intersection.o Path.o Dice.o DevelopmentCard.o SpecialCard.o
 	$(CXX) $(CXXFLAGS) $^ -o catan
 
-test: TestCounter.o Tests.o $(OBJECTS)
+test: TestCounter.o Tests.o board.o catan.o ResourceCard.o player.o Hexagon.o Intersection.o Path.o Dice.o DevelopmentCard.o SpecialCard.o
 	$(CXX) $(CXXFLAGS) $^ -o test
 
 #tidy:
@@ -33,7 +33,7 @@ cppcheck:
 	cppcheck $(SOURCES) --enable=all
 
 
-valgrind: demo test
+valgrind: catan demo test
 	valgrind --tool=memcheck $(VALGRIND_FLAGS) ./demo 2>&1 | { egrep "lost| at " || true; }
 	valgrind --tool=memcheck $(VALGRIND_FLAGS) ./test 2>&1 | { egrep "lost| at " || true; }
 

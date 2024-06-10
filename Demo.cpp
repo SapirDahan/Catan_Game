@@ -11,126 +11,95 @@ using namespace ariel;
 
 int main(){
 
-    // Instantiate the board
-    Board board;
+    // Create three players
+    Player player1("A");
+    Player player2("B");
+    Player player3("C");
 
-    // Print coordinates of all hexagons
-    std::cout << "Hexagon coordinates:" << std::endl;
-    for (unsigned int x = 0; x < 5; ++x) {
-        unsigned int rowLength = (x < 3) ? x + 3 : 7 - x;
-        for (unsigned int y = 0; y < rowLength; ++y) {
-            Hexagon& hex = board.getHexagon(x, y);
-            std::cout << "Hexagon at (" << hex.getX() << ", " << hex.getY() << ")" << std::endl;
-        }
+    // Initialize the Catan game with the three players
+    Catan catanGame(player1, player2, player3);
+
+    // Distribute the initial resource cards to all players
+    catanGame.handFirstCards();
+
+    // Choose the starting player
+    catanGame.ChooseStartingPlayer();
+
+    // Player 1 places their initial roads and settlements
+    catanGame.placeRoad(*catanGame.checkTurn(), 13);
+    catanGame.placeRoad(*catanGame.checkTurn(), 41);
+    catanGame.placeSettlement(*catanGame.checkTurn(), 10);
+    catanGame.placeSettlement(*catanGame.checkTurn(), 29);
+
+    // Move to the next player
+    catanGame.nextPlayer();
+
+    // Player 2 places their initial roads and settlements
+    catanGame.placeRoad(*catanGame.checkTurn(), 56);
+    catanGame.placeRoad(*catanGame.checkTurn(), 52);
+    catanGame.placeSettlement(*catanGame.checkTurn(), 40);
+    catanGame.placeSettlement(*catanGame.checkTurn(), 44);
+
+    // Move to the next player
+    catanGame.nextPlayer();
+
+    // Player 3 places their initial roads and settlements
+    catanGame.placeRoad(*catanGame.checkTurn(), 15);
+    catanGame.placeRoad(*catanGame.checkTurn(), 58);
+    catanGame.placeSettlement(*catanGame.checkTurn(), 13);
+    catanGame.placeSettlement(*catanGame.checkTurn(), 42);
+
+    // Move to the next player
+    catanGame.nextPlayer();
+
+    std::cout << std::endl << "Initial placements are completed." << std::endl;
+    std::cout << std::endl << "Let the game begin!" << std::endl;
+
+    // Distribute resources from adjacent hexagons to all players based on the dice roll
+    for(unsigned int i = 2; i <= 12; i++) {
+        catanGame.distributeResources(i);
     }
 
-    // Print adjacent hexagon coordinates for each intersection
-    std::cout << "\nIntersection adjacent hexagons:" << std::endl;
-    for (unsigned int i = 0; i < board.getIntersectionAdjacenciesSize(); ++i) {
-        const Intersection& intersection = board.getIntersection(i);
-        std::cout << "Intersection " << intersection.getIndex() << " is adjacent to hexagons: ";
-        for (const auto& hexagon : intersection.getAdjacentHexagons()) {
-            std::cout << "(" << hexagon.first << ", " << hexagon.second << ") ";
-        }
-        std::cout << std::endl;
+    // Roll the dice and distribute resources based on the result
+    unsigned int diceOutcome = catanGame.rollDices();
+    std::cout << "Rolling the dice... the output is: " << diceOutcome << endl;
+    catanGame.distributeResources(diceOutcome);
+
+    // Handle special case if the dice outcome is 7
+    if(diceOutcome == 7){
+        catanGame.handleSeven();
     }
 
-    // Print adjacent intersections for each path
-    std::cout << "\nPath adjacent intersections:" << std::endl;
-    for (unsigned int i = 0; i < board.getPathAdjacenciesSize(); ++i) {
-        const Path& path = board.getPath(i);
-        std::pair<int, int> intersections = path.getIntersections();
-        std::cout << "Path " << path.getIndex() << " is between intersections "
-                  << intersections.first << " and " << intersections.second << std::endl;
+    // Repeat dice rolling and resource distribution
+    diceOutcome = catanGame.rollDices();
+    std::cout << "Rolling the dice... the output is: " << diceOutcome << endl;
+    catanGame.distributeResources(diceOutcome);
+
+    if(diceOutcome == 7){
+        catanGame.handleSeven();
     }
 
-    Dice dice;
+    diceOutcome = catanGame.rollDices();
+    std::cout << "Rolling the dice... the output is: " << diceOutcome << endl;
+    catanGame.distributeResources(diceOutcome);
 
-    std::cout << "Rolling the dice 10 times:" << std::endl;
-    for (int i = 0; i < 10; ++i) {
-        std::cout << "Roll " << i + 1 << ": " << dice.roll() << std::endl;
+    if(diceOutcome == 7){
+        catanGame.handleSeven();
     }
+
+    // Display the current state of the board
+    std::cout << "Displaying the board\n" << endl;
+    catanGame.displayBoard();
+
+    // Show the cards held by each player
+    std::cout << player1.getName() << " has the cards: " << std::endl;
+    catanGame.showPlayerCards(player1);
+
+    std::cout << player2.getName() << " has the cards: " << std::endl;
+    catanGame.showPlayerCards(player2);
+
+    std::cout << player3.getName() << " has the cards: " << std::endl;
+    catanGame.showPlayerCards(player3);
 
     return 0;
-
-
 }
-
-//int main1()
-//{
-//    Player p1("Amit");
-//    Player p2("Yossi");
-//    Player p3("Dana");
-//    Catan catan(p1, p2, p3);
-//    // Starting of the game. Every player places two settlements and two roads.
-//    catan.ChooseStartingPlayer();   // should print the name of the starting player, assume it is Amit.
-//    Board board = catan.getBoard(); // get the board of the game.
-//    vector<string> places = {"Forest", "Hills"};
-//    vector<int> placesNum = {5, 6};
-//    p1.placeSettlement(places, placesNum, board);
-//    p1.placeRoad(places, placesNum, board);
-//    vector<string> places = {"Agricultural Land", "Desert"};
-//    vector<int> placesNum = {3, 4};
-//    p1.placeSettlement(places, placesNum, board);
-//    p1.placeRoad(places, placesNum, board); // p1 chooses Forest, hills, Agricultural Land, Desert with numbers 5, 6, 3, 4.
-//
-//    vector<string> places = {"Mountains", "Pasture Land"};
-//    vector<int> placesNum = {4, 9};
-//    p2.placeSettlement(places, placesNum, board);
-//    p2.placeRoad(places, placesNum, board);
-//    try
-//    {
-//        p3.placeSettlement(places, placesNum, board); // p3 tries to place a settlement in the same location as p2.
-//    }
-//    catch (const std::exception &e)
-//    {
-//        cout << e.what() << endl;
-//    }
-//    vector<string> places = {"Forest", "Pasture Land"};
-//    vector<int> placesNum = {5, 9};
-//    p2.placeSettlement(places, placesNum, board);
-//    p2.placeRoad(places, placesNum, board); // p2 chooses Mountains, Pasture Land, and Forest with numbers 4, 9, 5.
-//
-//    vector<string> places = {"Mountains", "Pasture Land"};
-//    vector<int> placesNum = {3, 8};
-//    p3.placeSettlement(places, placesNum, board);
-//    p3.placeRoad(places, placesNum, board);
-//    vector<string> places = {"Agricultural Land", "Pasture Land"};
-//    vector<int> placesNum = {3, 9};
-//    p3.placeSettlement(places, placesNum, board);
-//    p3.placeRoad(places, placesNum, board); // p3 chooses Mountains, Pasture Land, Agricultural Land, Pasture Land with numbers 3, 8, 3, 9.
-//
-//    // p1 has wood,bricks, and wheat, p2 has wood, ore, and wool, p3 has ore, wool, wheat.
-//    p1.rollDice();                                    // Lets say it's print 4. Then, p2 gets ore from the mountations.
-//    p1.placeRoad({"Forest", "Hills"}, {5, 6}, board); // p1 continues to build a road.
-//    p1.endTurn();                                     // p1 ends his turn.
-//
-//    p2.rollDice(); // Lets say it's print 9. Then, p3 gets wool from the Pasture Land, p2 gets wool from the Pasture Land.
-//    p2.endTurn();  // p2 ends his turn.
-//
-//    p3.rollDice(); // Lets say it's print 3. Then, p3 gets wheat from the Agricultural Land and Ore from the Mountains, p1 gets wheat from the Agricultural Land.
-//    p3.endTurn();  // p3 ends his turn.
-//
-//    try
-//    {
-//        p2.rollDice(); // p2 tries to roll the dice again, but it's not his turn.
-//    }
-//    catch (const std::exception &e)
-//    {
-//        cout << e.what() << endl;
-//    }
-//
-//    p1.rollDice();                       // Lets say it's print 6. Then, p1 gets bricks from the hills.
-//    p1.trade(p2, "wood", "brick", 1, 1); // p1 trades 1 wood for 1 brick with p2.
-//    p1.endTurn();                        // p1 ends his turn.
-//
-//    p2.rollDice();           // Lets say it's print 9. Then, p3 gets wool from the Pasture Land, p2 gets wool from the Pasture Land.
-//    p2.buyDevelopmentCard(); // p2 buys a development card. Lets say it is a bonus points card.
-//    p2.endTurn();            // p2 ends his turn.
-//
-//    p1.printPoints(); // p1 has 2 points because it has two settelments.
-//    p2.printPoints(); // p2 has 3 points because it has two settelments and a bonus points card.
-//    p3.printPoints(); // p3 has 2 points because it has two settelments.
-//
-//    catan.printWinner(); // Should print None because no player reached 10 points.
-//}

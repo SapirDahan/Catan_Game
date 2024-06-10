@@ -200,22 +200,14 @@ namespace ariel {
         catanGame->placeRoad(*catanGame->checkTurn(), 41);
         catanGame->placeSettlement(*catanGame->checkTurn(), 10);
         catanGame->placeSettlement(*catanGame->checkTurn(), 29);
-//        for(int i=1 ; i<=15 ; i++){
-//            catanGame->takeCard(*catanGame->checkTurn(), CardType::Ore);
-//            catanGame->takeCard(*catanGame->checkTurn(), CardType::Wool);
-//            catanGame->takeCard(*catanGame->checkTurn(), CardType::Grain);
-//        }
+
         catanGame->nextPlayer();
 
         catanGame->placeRoad(*catanGame->checkTurn(), 56);
         catanGame->placeRoad(*catanGame->checkTurn(), 52);
         catanGame->placeSettlement(*catanGame->checkTurn(), 40);
         catanGame->placeSettlement(*catanGame->checkTurn(), 44);
-//        for(int i=1 ; i<=3 ; i++){
-//            catanGame->takeCard(*catanGame->checkTurn(), CardType::Ore);
-//            catanGame->takeCard(*catanGame->checkTurn(), CardType::Wool);
-//            catanGame->takeCard(*catanGame->checkTurn(), CardType::Grain);
-//        }
+
         catanGame->nextPlayer();
 
         catanGame->placeRoad(*catanGame->checkTurn(), 15);
@@ -234,7 +226,7 @@ namespace ariel {
 int main() {
     ariel::Game game;
     //game.setRoadsandSettlements();
-    game.setRoadsandSettlements_auto(); // @@ Debug
+    game.setRoadsandSettlements_auto();
     game.start();
     return 0;
 }

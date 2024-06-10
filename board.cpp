@@ -23,6 +23,13 @@ Board::Board() {
     initializePaths();
 }
 
+Board::~Board() {
+    // Clear hexagons
+    hexagons.clear();
+
+    paths.clear();
+}
+
 Hexagon& Board::getHexagon(unsigned int x, unsigned int y) {
     for (auto& hex : hexagons) {
         if (hex.getX() == x && hex.getY() == y) {

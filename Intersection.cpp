@@ -1,3 +1,9 @@
+/*
+ * Author: Sapir Dahan
+ * ID: 325732972
+ * Mail: sapirdahan2003@gmail.com
+ */
+
 #include "Intersection.hpp"
 #include "Hexagon.hpp"
 #include <iostream>
@@ -85,7 +91,7 @@ bool Intersection::setStructure(Structure newStructure, Player& player) {
  */
 bool Intersection::isAdjacentTo(const Hexagon& hex) const {
     // Get the adjacency list for this intersection
-    const auto& adjacencies = intersectionAdjacencies2[this->index];
+    const auto& adjacencies = intersectionAdjacencies[this->index];
 
     // Check if the given hexagon is in the adjacency list
     for (const auto& adjacency : adjacencies) {
@@ -95,3 +101,8 @@ bool Intersection::isAdjacentTo(const Hexagon& hex) const {
     }
     return false;
 }
+
+const std::vector<std::vector<std::pair<unsigned int, unsigned int>>>& Intersection::getIntersections() {
+    return intersectionAdjacencies;
+}
+

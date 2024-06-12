@@ -1,7 +1,11 @@
-/**
- * Demo file for Ex3.
- *
+
+/*
+ * Author: Sapir Dahan
+ * ID: 325732972
+ * Mail: sapirdahan2003@gmail.com
  */
+
+
 #include <iostream>
 #include <vector>
 #include "catan.hpp"

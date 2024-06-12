@@ -1,3 +1,9 @@
+/*
+ * Author: Sapir Dahan
+ * ID: 325732972
+ * Mail: sapirdahan2003@gmail.com
+ */
+
 #include "catan.hpp"
 #include "Intersection.hpp"
 #include "Hexagon.hpp"
@@ -131,7 +137,9 @@ namespace ariel {
                     player3.addKnights(1);
                 }
             }
-            std::cout << "Card of type " << cardTypeToString(type) << " handed to " << player.getName() << "." << std::endl;
+
+            // Optional to print that a player took a card
+            //std::cout << "Card of type " << cardTypeToString(type) << " handed to " << player.getName() << "." << std::endl;
             return true;
         }
         std::cout << "Card of type " << cardTypeToString(type) << " is not available." << std::endl;
@@ -154,10 +162,12 @@ namespace ariel {
                         cardOwnership.erase(card);
                     }
                 }
-                if (type != CardType::LargestArmy){
-                    cout << player.getName() << " has just returned " << amount << " " << cardTypeToString(type)
-                         << " card/s to the bank." << endl;
-                }
+
+                // Optional to print that a player has returned a card
+//                if (type != CardType::LargestArmy){
+//                    cout << player.getName() << " has just returned " << amount << " " << cardTypeToString(type)
+//                         << " card/s to the bank." << endl;
+//                }
                 return true;
             }
         }

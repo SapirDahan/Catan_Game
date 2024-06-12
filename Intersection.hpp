@@ -84,6 +84,15 @@ namespace ariel {
          */
         bool isAdjacentTo(const Hexagon& hex) const;
 
+        /**
+        * @brief Gets the static list of intersection adjacencies.
+        *
+        * @return const std::vector<std::vector<std::pair<unsigned int, unsigned int>>>& Static vector of intersection adjacencies.
+        */
+        static const std::vector<std::vector<std::pair<unsigned int, unsigned int>>>& getIntersections();
+
+
+
     private:
         unsigned int index;  // The index of the intersection
         Structure structure;  // The structure built on the intersection
@@ -91,8 +100,9 @@ namespace ariel {
         std::vector<std::pair<unsigned int, unsigned int>> adjacentHexagons;  // List of adjacent hexagons
     };
 
+
     // Define intersection adjacencies
-    const std::vector<std::vector<std::pair<unsigned int, unsigned int>>> intersectionAdjacencies2 = {{{0, 0}},
+    static const std::vector<std::vector<std::pair<unsigned int, unsigned int>>> intersectionAdjacencies = {{{0, 0}},
                                                                                                       {{0, 0}},
                                                                                                       {{0, 0}, {0, 1}},
                                                                                                       {{0, 1}},

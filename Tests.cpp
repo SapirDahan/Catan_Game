@@ -1,3 +1,9 @@
+/*
+ * Author: Sapir Dahan
+ * ID: 325732972
+ * Mail: sapirdahan2003@gmail.com
+ */
+
 #include "doctest.h"
 #include "catan.hpp"
 #include "board.hpp"

@@ -29,7 +29,7 @@ namespace ariel {
         Player player1;  // First player
         Player player2;  // Second player
         Player player3;  // Third player
-        std::vector<std::shared_ptr<Card>> cards;  // All cards in the game
+        std::vector<Card*> cards;  // All cards in the game
         Dice dice;  // Dice object for rolling
         std::unordered_map<unsigned int, const Player*> cardOwnership;  // Map of card ownership
 
@@ -50,6 +50,8 @@ namespace ariel {
          * @param p3 The third player.
          */
         Catan(const Player& p1, const Player& p2, const Player& p3);
+
+        ~Catan();  // Destructor to clean up dynamically allocated memory
 
         /**
          * @brief Choose the starting player randomly.

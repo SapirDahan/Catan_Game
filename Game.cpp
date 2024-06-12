@@ -3,11 +3,18 @@
 
 namespace ariel {
 
-    Game::Game() : currentPlayerIndex(0) {
+    Game::Game() : currentPlayerIndex(0), catanGame(nullptr) {
         welcomeAndSetupPlayers();
-        catanGame = std::make_shared<Catan>(*players[0], *players[1], *players[2]);
+        catanGame = new Catan(*players[0], *players[1], *players[2]);
         catanGame->handFirstCards();
         catanGame->ChooseStartingPlayer();
+    }
+
+    Game::~Game() {
+        delete catanGame;
+        for (auto player : players) {
+            delete player;
+        }
     }
 
     void Game::welcomeAndSetupPlayers() {
@@ -17,7 +24,7 @@ namespace ariel {
             std::string name;
             std::cout << "Player " << i << ": ";
             std::cin >> name;
-            players.push_back(std::make_shared<Player>(name));
+            players.push_back(new Player(name));
         }
         std::cout << std::endl;
     }

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vector>
-#include <memory>
 #include <string>
 #include "player.hpp"
 #include "catan.hpp"
@@ -17,6 +16,11 @@ namespace ariel {
          * @brief Constructs a Game object and initializes the game.
          */
         Game();
+
+        /**
+         * @brief Destructor to clean up dynamically allocated memory.
+         */
+        ~Game();
 
         /**
          * @brief Starts the game by setting up players and initiating gameplay.
@@ -41,8 +45,8 @@ namespace ariel {
         void setRoadsandSettlements_auto();
 
     private:
-        std::shared_ptr<Catan> catanGame;  // Pointer to the Catan game instance
-        std::vector<std::shared_ptr<Player>> players;  // List of players in the game
+        Catan* catanGame;  // Pointer to the Catan game instance
+        std::vector<Player*> players;  // List of players in the game
         unsigned int currentPlayerIndex;  // Index of the current player
 
         /**

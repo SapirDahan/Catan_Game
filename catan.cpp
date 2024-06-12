@@ -9,46 +9,52 @@ using namespace std;
 namespace ariel {
     // Constructor
     Catan::Catan(const Player& p1, const Player& p2, const Player& p3) : turn(p1), player1(p1), player2(p2), player3(p3), dice() {
-        // Create all the cards in the game
-
         // Add Resource Cards
         for (unsigned int i = 0; i < 19; ++i) {
-            cards.push_back(std::make_shared<ResourceCard>(CardType::Lumber));
+            cards.push_back(new ResourceCard(CardType::Lumber));
         }
         for (unsigned int i = 0; i < 19; ++i) {
-            cards.push_back(std::make_shared<ResourceCard>(CardType::Brick));
+            cards.push_back(new ResourceCard(CardType::Brick));
         }
         for (unsigned int i = 0; i < 19; ++i) {
-            cards.push_back(std::make_shared<ResourceCard>(CardType::Wool));
+            cards.push_back(new ResourceCard(CardType::Wool));
         }
         for (unsigned int i = 0; i < 19; ++i) {
-            cards.push_back(std::make_shared<ResourceCard>(CardType::Grain));
+            cards.push_back(new ResourceCard(CardType::Grain));
         }
         for (unsigned int i = 0; i < 19; ++i) {
-            cards.push_back(std::make_shared<ResourceCard>(CardType::Ore));
+            cards.push_back(new ResourceCard(CardType::Ore));
         }
 
         // Add Development Cards
         for (unsigned int i = 0; i < 14; ++i) {
-            cards.push_back(std::make_shared<KnightCard>());
+            cards.push_back(new KnightCard());
         }
         for (unsigned int i = 0; i < 5; ++i) {
-            cards.push_back(std::make_shared<VictoryPointCard>());
+            cards.push_back(new VictoryPointCard());
         }
         for (unsigned int i = 0; i < 2; ++i) {
-            cards.push_back(std::make_shared<RoadBuildingCard>());
+            cards.push_back(new RoadBuildingCard());
         }
         for (unsigned int i = 0; i < 2; ++i) {
-            cards.push_back(std::make_shared<YearOfPlentyCard>());
+            cards.push_back(new YearOfPlentyCard());
         }
         for (unsigned int i = 0; i < 2; ++i) {
-            cards.push_back(std::make_shared<MonopolyCard>());
+            cards.push_back(new MonopolyCard());
         }
 
         // Add Special Cards
-        cards.push_back(std::make_shared<LargestArmyCard>());
-
+        cards.push_back(new LargestArmyCard());
     }
+
+    // Destructor
+    Catan::~Catan() {
+        for (Card* card : cards) {
+            delete card;
+        }
+    }
+
+
 
 
     void Catan::ChooseStartingPlayer() const{

@@ -41,6 +41,15 @@ namespace ariel {
          */
         unsigned int findAvailableCard(CardType type);
 
+        /**
+         * @brief Helper function to handle the return of resource cards when a 7 is rolled.
+         *
+         * @param player The player who needs to return cards.
+         */
+        void handleReturnCardsForSeven(Player& player);
+
+        const unsigned int cardNotAvailable = 1000; // Represent card not available
+
     public:
         /**
          * @brief Construct a new Catan game with three players.
@@ -250,6 +259,13 @@ namespace ariel {
          * @param player The player initiating the trade.
          */
         void tradeCards(const Player &player);
+
+        /**
+     * @brief Retrieves the current state of the game board.
+     *
+     * @return Board The current game board.
+     */
+        Board getBoard();
 
     };
 }

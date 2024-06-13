@@ -16,9 +16,9 @@ using namespace ariel;
 int main(){
 
     // Create three players
-    Player player1("A");
-    Player player2("B");
-    Player player3("C");
+    Player player1("Alice");
+    Player player2("Bob");
+    Player player3("Charlie");
 
     // Initialize the Catan game with the three players
     Catan catanGame(player1, player2, player3);

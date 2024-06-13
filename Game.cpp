@@ -9,20 +9,29 @@
 
 namespace ariel {
 
+    /**
+     * @brief Constructs a Game object and initializes the game.
+     */
     Game::Game() : currentPlayerIndex(0), catanGame(nullptr) {
-        welcomeAndSetupPlayers();
-        catanGame = new Catan(*players[0], *players[1], *players[2]);
-        catanGame->handFirstCards();
-        catanGame->ChooseStartingPlayer();
+        welcomeAndSetupPlayers(); // Set up players and welcome them to the game
+        catanGame = new Catan(*players[0], *players[1], *players[2]); // Initialize the Catan game with the players
+        catanGame->handFirstCards(); // Hand out initial cards to players
+        catanGame->ChooseStartingPlayer(); // Choose the starting player
     }
 
+    /**
+     * @brief Destructor to clean up dynamically allocated memory.
+     */
     Game::~Game() {
-        delete catanGame;
+        delete catanGame; // Delete the Catan game instance
         for (auto player : players) {
-            delete player;
+            delete player; // Delete each player
         }
     }
 
+    /**
+     * @brief Welcomes players and sets up the game by initializing player objects.
+     */
     void Game::welcomeAndSetupPlayers() {
         std::cout << std::endl << "Welcome to Catan!" << std::endl;
         std::cout << std::endl << "Please enter the names of 3 players:" << std::endl;
@@ -30,20 +39,24 @@ namespace ariel {
             std::string name;
             std::cout << "Player " << i << ": ";
             std::cin >> name;
-            players.push_back(new Player(name));
+            players.push_back(new Player(name)); // Create a new player and add to the list
         }
         std::cout << std::endl;
     }
 
+    /**
+     * @brief Starts the game by setting up the board and managing player turns.
+     */
     void Game::start() {
         unsigned int resultOfDice;
         unsigned int numOfRollingTheDice = 0;
 
         // Distribute resources from adjacent hexagons to all players
-        for(unsigned int i=2; i<=12; i++) {
+        for (unsigned int i = 2; i <= 12; i++) {
             catanGame->distributeResources(i);
         }
 
+        // Main game loop
         while (true) {
             std::cout << std::endl;
             std::cout << catanGame->checkTurn()->getName() << ", it's your turn." << std::endl << std::endl;
@@ -61,38 +74,37 @@ namespace ariel {
 
             switch (choice) {
                 case 1:
-                    if(numOfRollingTheDice < 1){
+                    if (numOfRollingTheDice < 1) {
                         numOfRollingTheDice++;
-                        resultOfDice = catanGame->rollDices();
+                        resultOfDice = catanGame->rollDices(); // Roll the dice
                         std::cout << std::endl << "Rolling dice... The result is: " << resultOfDice << std::endl;
-                        catanGame->distributeResources(resultOfDice);
+                        catanGame->distributeResources(resultOfDice); // Distribute resources based on the dice result
+                    } else {
+                        std::cout << std::endl << "You have already rolled the dice this turn." << std::endl;
                     }
-                    else{
-                        std::cout << std::endl << "You have already rolled the dices at this turn." << std::endl;
-                    }
-                    if(resultOfDice == 7){
-                        catanGame->handleSeven();
+                    if (resultOfDice == 7) {
+                        catanGame->handleSeven(); // Handle special case when 7 is rolled
                     }
                     break;
                 case 2:
-                    buildMenu();
+                    buildMenu(); // Show build options
                     break;
                 case 3:
-                    catanGame->tradeCards(*catanGame->checkTurn());
+                    catanGame->tradeCards(*catanGame->checkTurn()); // Manage trading of cards
                     break;
                 case 4:
-                    catanGame->buyDevCard(*catanGame->checkTurn());
+                    catanGame->buyDevCard(*catanGame->checkTurn()); // Buy development card
                     break;
                 case 5:
-                    showStatus();
+                    showStatus(); // Show the current status of the game
                     break;
                 case 6:
-                    catanGame->nextPlayer();
+                    catanGame->nextPlayer(); // Move to the next player
                     numOfRollingTheDice = 0;
                     break;
                 case 7:
-                    cout << "Existing the game" << endl;
-                    exit(EXIT_SUCCESS);
+                    std::cout << "Exiting the game" << std::endl;
+                    exit(EXIT_SUCCESS); // Exit the game
                     break;
                 default:
                     std::cout << "Invalid choice. Please try again." << std::endl;
@@ -100,6 +112,9 @@ namespace ariel {
         }
     }
 
+    /**
+     * @brief Displays the build menu for players to choose actions.
+     */
     void Game::buildMenu() {
         std::cout << std::endl << "Build Options: " << std::endl;
         std::cout << "1. Road" << std::endl;
@@ -110,34 +125,33 @@ namespace ariel {
 
         unsigned int index;
         switch (buildChoice) {
-
             case 1:
                 std::cout << std::endl << "Enter path index to place road: ";
                 std::cin >> index;
                 std::cout << std::endl;
-                catanGame->placeRoad(*catanGame->checkTurn(), index);
+                catanGame->placeRoad(*catanGame->checkTurn(), index); // Place a road
                 break;
-
             case 2:
                 std::cout << std::endl << "Enter intersection index to place settlement: ";
                 std::cin >> index;
                 std::cout << std::endl;
-                catanGame->placeSettlement(*catanGame->checkTurn(),index);
+                catanGame->placeSettlement(*catanGame->checkTurn(), index); // Place a settlement
                 break;
-
             case 3:
                 std::cout << std::endl << "Enter intersection index to place city: ";
                 std::cin >> index;
                 std::cout << std::endl;
-                catanGame->placeCity(*catanGame->checkTurn(),index);
+                catanGame->placeCity(*catanGame->checkTurn(), index); // Place a city
                 break;
-
             default:
                 std::cout << "Invalid build choice. Please try again." << std::endl;
         }
     }
 
-    void Game::showStatus(){
+    /**
+     * @brief Shows the current status of the game, including player points and resources.
+     */
+    void Game::showStatus() {
         std::cout << std::endl << "Status Options: " << std::endl;
         std::cout << "1. Cards of player 1" << std::endl;
         std::cout << "2. Cards of player 2" << std::endl;
@@ -145,70 +159,71 @@ namespace ariel {
         std::cout << "4. Show board" << std::endl;
         std::cout << "5. Show points" << std::endl;
 
-
         int statusChoice;
         std::cin >> statusChoice;
 
         switch (statusChoice) {
-
             case 1:
-                catanGame->showPlayerCards(*players[0]);
+                catanGame->showPlayerCards(*players[0]); // Show cards of player 1
                 break;
             case 2:
-                catanGame->showPlayerCards(*players[1]);
+                catanGame->showPlayerCards(*players[1]); // Show cards of player 2
                 break;
             case 3:
-                catanGame->showPlayerCards(*players[2]);
+                catanGame->showPlayerCards(*players[2]); // Show cards of player 3
                 break;
             case 4:
-                catanGame->displayBoard();
+                catanGame->displayBoard(); // Display the current board
                 break;
             case 5:
-                catanGame->displayPoints();
+                catanGame->displayPoints(); // Display the points of all players
                 break;
             default:
-                std::cout << "Invalid choice. Please try again." << std::endl;;
+                std::cout << "Invalid choice. Please try again." << std::endl;
         }
     }
 
-
-    void Game::setRoadsandSettlements(){
-
+    /**
+     * @brief Sets the initial roads and settlements for players.
+     */
+    void Game::setRoadsandSettlements() {
         unsigned int index;
         bool buildSuccess;
         int counter;
 
-        for(unsigned int i = 0; i < 3; i++){
+        for (unsigned int i = 0; i < 3; i++) {
             counter = 0;
-            while(counter < 2){
-                cout << endl << catanGame->checkTurn()->getName() << ", please choose an index for your road: ";
+            while (counter < 2) {
+                std::cout << std::endl << catanGame->checkTurn()->getName() << ", please choose an index for your road: ";
                 std::cin >> index;
-                buildSuccess = catanGame->placeRoad(*catanGame->checkTurn(), index);
+                buildSuccess = catanGame->placeRoad(*catanGame->checkTurn(), index); // Place road
 
-                if(buildSuccess){
+                if (buildSuccess) {
                     counter++;
                 }
             }
             counter = 0;
 
-            while(counter < 2){
-                cout << endl << catanGame->checkTurn()->getName() << ", please choose an index for your settlement: ";
+            while (counter < 2) {
+                std::cout << std::endl << catanGame->checkTurn()->getName() << ", please choose an index for your settlement: ";
                 std::cin >> index;
-                buildSuccess = catanGame->placeSettlement(*catanGame->checkTurn(), index);
+                buildSuccess = catanGame->placeSettlement(*catanGame->checkTurn(), index); // Place settlement
 
-                if(buildSuccess){
+                if (buildSuccess) {
                     counter++;
                 }
             }
-            catanGame->nextPlayer();
+            catanGame->nextPlayer(); // Move to the next player
         }
-        std::cout << std::endl << "Initial placements is completed." << std::endl;
+        std::cout << std::endl << "Initial placements are completed." << std::endl;
         std::cout << std::endl << "Let the game begin!" << std::endl;
     }
 
-    // @@@ For debug purposes only
-    void Game::setRoadsandSettlements_auto(){
-
+    /**
+     * @brief Sets the initial roads and settlements for players automatically
+     */
+    void Game::setRoadsandSettlements_auto() {
+        // Automatically place roads and settlements for debugging
         catanGame->placeRoad(*catanGame->checkTurn(), 13);
         catanGame->placeRoad(*catanGame->checkTurn(), 41);
         catanGame->placeSettlement(*catanGame->checkTurn(), 10);
@@ -229,18 +244,16 @@ namespace ariel {
         catanGame->placeSettlement(*catanGame->checkTurn(), 42);
         catanGame->nextPlayer();
 
-        std::cout << std::endl << "Initial placements is completed." << std::endl;
+        std::cout << std::endl << "Initial placements are completed." << std::endl;
         std::cout << std::endl << "Let the game begin!" << std::endl;
     }
 
 }
 
-
 int main() {
     ariel::Game game;
-    //game.setRoadsandSettlements();
-    game.setRoadsandSettlements_auto();
-    game.start();
+    //game.setRoadsandSettlements(); // Uncomment this line to manually set roads and settlements
+    game.setRoadsandSettlements_auto(); // Automatically set roads and settlements for debug purposes
+    game.start(); // Start the game
     return 0;
 }
-

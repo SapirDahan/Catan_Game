@@ -85,76 +85,20 @@ namespace ariel {
         bool isAdjacentTo(const Hexagon& hex) const;
 
         /**
-        * @brief Gets the static list of intersection adjacencies.
-        *
-        * @return const std::vector<std::vector<std::pair<unsigned int, unsigned int>>>& Static vector of intersection adjacencies.
-        */
-        static const std::vector<std::vector<std::pair<unsigned int, unsigned int>>>& getIntersections();
-
-
+         * @brief Gets the static list of intersection adjacencies.
+         *
+         * @return const std::vector<std::vector<std::pair<unsigned int, unsigned int>>>& Static vector of intersection adjacencies.
+         */
+        static const std::vector<std::vector<std::pair<unsigned int, unsigned int>>>& getIntersectionAdjacencies();
 
     private:
         unsigned int index;  // The index of the intersection
         Structure structure;  // The structure built on the intersection
         Player* owner;  // The owner of the structure
         std::vector<std::pair<unsigned int, unsigned int>> adjacentHexagons;  // List of adjacent hexagons
+
+        // Define intersection adjacencies
+        static const std::vector<std::vector<std::pair<unsigned int, unsigned int>>> intersectionAdjacencies;
     };
-
-
-    // Define intersection adjacencies
-    static const std::vector<std::vector<std::pair<unsigned int, unsigned int>>> intersectionAdjacencies = {{{0, 0}},
-                                                                                                      {{0, 0}},
-                                                                                                      {{0, 0}, {0, 1}},
-                                                                                                      {{0, 1}},
-                                                                                                      {{0, 1}, {0, 2}},
-                                                                                                      {{0, 2}},
-                                                                                                      {{0, 2}},
-                                                                                                      {{1, 0}},
-                                                                                                      {{0, 0}, {1, 0}},
-                                                                                                      {{0, 0}, {1, 0}, {1, 1}},
-                                                                                                      {{0, 0}, {0, 1}, {1, 1}},
-                                                                                                      {{1, 2}, {0, 1}, {1, 1}},
-                                                                                                      {{0, 1}, {1, 2}, {0, 2}},
-                                                                                                      {{1, 3}, {1, 2}, {0, 2}},
-                                                                                                      {{0, 2}, {1, 3}},
-                                                                                                      {{1, 3}},
-                                                                                                      {{2, 0}},
-                                                                                                      {{1, 0}, {2, 0}},
-                                                                                                      {{1, 0}, {2, 0}, {2, 1}},
-                                                                                                      {{1, 0}, {1, 1}, {2, 1}},
-                                                                                                      {{1, 1}, {2, 1}, {2, 2}},
-                                                                                                      {{1, 1}, {1, 2}, {2, 2}},
-                                                                                                      {{1, 2}, {2, 2}, {2, 3}},
-                                                                                                      {{1, 2}, {1, 3}, {2, 3}},
-                                                                                                      {{1, 3}, {2, 3}, {2, 4}},
-                                                                                                      {{1, 3}, {2, 4}},
-                                                                                                      {{2, 4}},
-                                                                                                      {{2, 0}},
-                                                                                                      {{2, 0}, {3, 0}},
-                                                                                                      {{2, 0}, {2, 1}, {3, 0}},
-                                                                                                      {{2, 1}, {3, 0}, {3, 1}},
-                                                                                                      {{2, 1}, {2, 2}, {3, 1}},
-                                                                                                      {{2, 2}, {3, 1}, {3, 2}},
-                                                                                                      {{2, 2}, {2, 3}, {3, 2}},
-                                                                                                      {{2, 3}, {3, 2}, {3, 3}},
-                                                                                                      {{2, 3}, {2, 4}, {3, 3}},
-                                                                                                      {{2, 4}, {3, 3}},
-                                                                                                      {{2, 4}},
-                                                                                                      {{3, 0}},
-                                                                                                      {{3, 0}, {4, 0}},
-                                                                                                      {{3, 0}, {3, 1}, {4, 0}},
-                                                                                                      {{3, 1}, {4, 0}, {4, 1}},
-                                                                                                      {{3, 1}, {3, 2}, {4, 1}},
-                                                                                                      {{3, 2}, {4, 1}, {4, 2}},
-                                                                                                      {{3, 2}, {3, 3}, {4, 2}},
-                                                                                                      {{3, 3}, {4, 2}},
-                                                                                                      {{3, 3}},
-                                                                                                      {{4, 0}},
-                                                                                                      {{4, 0}},
-                                                                                                      {{4, 0}, {4, 1}},
-                                                                                                      {{4, 1}},
-                                                                                                      {{4, 1}, {4, 2}},
-                                                                                                      {{4, 2}},
-                                                                                                      {{4, 2}}};
 
 } // namespace ariel

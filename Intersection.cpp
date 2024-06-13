@@ -10,6 +10,21 @@
 
 using namespace ariel;
 
+// Define static member
+const std::vector<std::vector<std::pair<unsigned int, unsigned int>>> Intersection::intersectionAdjacencies = {
+        {{0, 0}}, {{0, 0}}, {{0, 0}, {0, 1}}, {{0, 1}}, {{0, 1}, {0, 2}}, {{0, 2}}, {{0, 2}}, {{1, 0}},
+        {{0, 0}, {1, 0}}, {{0, 0}, {1, 0}, {1, 1}}, {{0, 0}, {0, 1}, {1, 1}}, {{1, 2}, {0, 1}, {1, 1}},
+        {{0, 1}, {1, 2}, {0, 2}}, {{1, 3}, {1, 2}, {0, 2}}, {{0, 2}, {1, 3}}, {{1, 3}}, {{2, 0}},
+        {{1, 0}, {2, 0}}, {{1, 0}, {2, 0}, {2, 1}}, {{1, 0}, {1, 1}, {2, 1}}, {{1, 1}, {2, 1}, {2, 2}},
+        {{1, 1}, {1, 2}, {2, 2}}, {{1, 2}, {2, 2}, {2, 3}}, {{1, 2}, {1, 3}, {2, 3}}, {{1, 3}, {2, 3}, {2, 4}},
+        {{1, 3}, {2, 4}}, {{2, 4}}, {{2, 0}}, {{2, 0}, {3, 0}}, {{2, 0}, {2, 1}, {3, 0}}, {{2, 1}, {3, 0}, {3, 1}},
+        {{2, 1}, {2, 2}, {3, 1}}, {{2, 2}, {3, 1}, {3, 2}}, {{2, 2}, {2, 3}, {3, 2}}, {{2, 3}, {3, 2}, {3, 3}},
+        {{2, 3}, {2, 4}, {3, 3}}, {{2, 4}, {3, 3}}, {{2, 4}}, {{3, 0}}, {{3, 0}, {4, 0}}, {{3, 0}, {3, 1}, {4, 0}},
+        {{3, 1}, {4, 0}, {4, 1}}, {{3, 1}, {3, 2}, {4, 1}}, {{3, 2}, {4, 1}, {4, 2}}, {{3, 2}, {3, 3}, {4, 2}},
+        {{3, 3}, {4, 2}}, {{3, 3}}, {{4, 0}}, {{4, 0}}, {{4, 0}, {4, 1}}, {{4, 1}}, {{4, 1}, {4, 2}}, {{4, 2}},
+        {{4, 2}}
+};
+
 /**
  * @brief Constructs an Intersection with a specific index.
  *
@@ -39,7 +54,6 @@ Intersection::Structure Intersection::getStructure() const { return structure; }
 Player* Intersection::getOwner() const {
     return structure != Structure::None ? owner : nullptr;
 }
-
 
 /**
  * @brief Adds an adjacent hexagon to the intersection.
@@ -102,7 +116,11 @@ bool Intersection::isAdjacentTo(const Hexagon& hex) const {
     return false;
 }
 
-const std::vector<std::vector<std::pair<unsigned int, unsigned int>>>& Intersection::getIntersections() {
+/**
+ * @brief Gets the static list of intersection adjacencies.
+ *
+ * @return const std::vector<std::vector<std::pair<unsigned int, unsigned int>>>& Static vector of intersection adjacencies.
+ */
+const std::vector<std::vector<std::pair<unsigned int, unsigned int>>>& Intersection::getIntersectionAdjacencies() {
     return intersectionAdjacencies;
 }
-

@@ -105,9 +105,9 @@ namespace ariel {
         void showRoads() const;
 
     private:
-        std::vector<Hexagon> hexagons;
-        std::vector<Intersection> intersections;
-        std::vector<Path> paths;
+        std::vector<Hexagon> hexagons; // Vector of all the hexagons
+        std::vector<Intersection> intersections; // Vector of all the intersections
+        std::vector<Path> paths; // Vector of all the paths
 
         /**
          * @brief Initialize the intersections based on adjacencies.
@@ -120,7 +120,7 @@ namespace ariel {
         void initializePaths();
 
         // Define intersection adjacencies
-        const std::vector<std::vector<std::pair<unsigned int, unsigned int>>> intersectionAdjacencies = Intersection::getIntersections();
+        const std::vector<std::vector<std::pair<unsigned int, unsigned int>>> intersectionAdjacencies = Intersection::getIntersectionAdjacencies();
 
         // Define path adjacencies
         const std::vector<std::pair<unsigned int, unsigned int>> pathAdjacencies = {{0,  1},

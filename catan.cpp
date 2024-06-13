@@ -13,8 +13,11 @@
 using namespace std;
 
 namespace ariel {
+
     // Constructor
-    Catan::Catan(const Player& p1, const Player& p2, const Player& p3) : turn(p1), player1(p1), player2(p2), player3(p3), dice() {
+    Catan::Catan(const Player &p1, const Player &p2, const Player &p3) : turn(p1), player1(p1), player2(p2),
+                                                                         player3(p3), dice() {
+
         // Add Resource Cards
         for (unsigned int i = 0; i < 19; ++i) {
             cards.push_back(new ResourceCard(CardType::Lumber));
@@ -55,119 +58,146 @@ namespace ariel {
 
     // Destructor
     Catan::~Catan() {
-        for (Card* card : cards) {
+        for (Card *card: cards) {
             delete card;
         }
     }
 
-
-
-
-    void Catan::ChooseStartingPlayer() const{
-        cout  << std::endl << "The starting player is: " << turn.getName() << "!" << endl;
+    /**
+     * @brief Displays the name of the starting player.
+     */
+    void Catan::ChooseStartingPlayer() const {
+        cout << endl << "The starting player is: " << turn.getName() << "!" << endl;
     }
 
-    Player Catan::nextPlayer(){
-
-        // Check if the palyer had won
-        if(turn.getPoints()>=10){
-            std::cout << std::endl << turn.getName() << " is the winner with " << turn.getPoints() << " victory points!!" << std::endl;
-            std::cout << std::endl << "GAME OVER!" << std::endl;
+    /**
+     * @brief Advances to the next player's turn.
+     *
+     * @return Player The next player.
+     */
+    Player Catan::nextPlayer() {
+        // Check if the player has won
+        if (turn.getPoints() >= 10) {
+            cout << endl << turn.getName() << " is the winner with " << turn.getPoints() << " victory points!!" << endl;
+            cout << endl << "GAME OVER!" << endl;
             exit(EXIT_SUCCESS);
         }
 
-        if(turn.getName() == player1.getName()){
+        // Rotate to the next player
+        if (turn.getName() == player1.getName()) {
             turn = player2;
             return player2;
-        }
-
-        else if(turn.getName() == player2.getName()){
+        } else if (turn.getName() == player2.getName()) {
             turn = player3;
             return player3;
-        }
-        else{
+        } else {
             turn = player1;
             return player1;
         }
     }
 
-    unsigned int Catan::rollDices(){
+    /**
+     * @brief Rolls two dice and returns the sum of their results.
+     *
+     * @return unsigned int The sum of the two dice rolls.
+     */
+    unsigned int Catan::rollDices() {
+        // Roll two dice and sum the results
         return dice.roll() + dice.roll();
     }
 
+    /**
+     * @brief Hands out the initial resource cards to each player.
+     */
     void Catan::handFirstCards() {
-
+        // Array of players for easy iteration
         Player players[] = {player1, player2, player3};
 
+        // Distribute initial resource cards to each player
         for (unsigned int i = 0; i < 3; ++i) {
-
+            // Each player gets 4 Lumber and 4 Bricks
             for (unsigned int j = 0; j < 4; ++j) {
                 takeCard(players[i], CardType::Lumber);
                 takeCard(players[i], CardType::Brick);
-
             }
+            // Each player gets 2 Wool and 2 Grain
             for (unsigned int j = 0; j < 2; ++j) {
                 takeCard(players[i], CardType::Wool);
                 takeCard(players[i], CardType::Grain);
             }
         }
 
-        std::cout << "Each player has received the initial resource cards: 4 Lumber, 4 Bricks, 2 Wool, and 2 Grain." << std::endl;
-        std::cout << "Before the game begins, each player shall build two roads and two settlements using these cards." << std::endl;
+        cout << "Each player has received the initial resource cards: 4 Lumber, 4 Bricks, 2 Wool, and 2 Grain." << endl;
+        cout << "Before the game begins, each player shall build two roads and two settlements using these cards."
+             << endl;
     }
 
-    bool Catan::takeCard(const Player& player, CardType type) {
+    /**
+     * @brief Takes a card of a specific type and assigns it to a player.
+     *
+     * @param player The player who takes the card.
+     * @param type The type of card to be taken.
+     * @return bool True if the card was successfully taken, false otherwise.
+     */
+    bool Catan::takeCard(const Player &player, CardType type) {
         unsigned int cardNumber = findAvailableCard(type);
-        if (cardNumber != 1000) {
-            if (player.getName() == player1.getName()) {
-                cardOwnership[cardNumber] = &player1;
-                if(type == CardType::Knight){
-                    player1.addKnights(1);
-                }
-            }
-            if (player.getName() == player2.getName()) {
-                cardOwnership[cardNumber] = &player2;
-                if(type == CardType::Knight){
-                    player2.addKnights(1);
-                }
-            }
-            if (player.getName() == player3.getName()) {
-                cardOwnership[cardNumber] = &player3;
-                if(type == CardType::Knight){
-                    player3.addKnights(1);
-                }
-            }
 
-            // Optional to print that a player took a card
-            //std::cout << "Card of type " << cardTypeToString(type) << " handed to " << player.getName() << "." << std::endl;
-            return true;
+        // Check if the card is available
+        if (cardNumber != cardNotAvailable) {
+            Player *players[] = {&player1, &player2, &player3};
+
+            for (auto *currentPlayer: players) {
+                if (player.getName() == currentPlayer->getName()) {
+                    cardOwnership[cardNumber] = currentPlayer;
+
+                    // if it is a knight add it to the player count
+                    if (type == CardType::Knight) {
+                        currentPlayer->addKnights(1);
+                    }
+
+                    // Optional: Uncomment the line below to print that a player took a card
+                    // cout << "Card of type " << cardTypeToString(type) << " handed to " << currentPlayer->getName() << "." << endl;
+                    return true;
+                }
+            }
         }
-        std::cout << "Card of type " << cardTypeToString(type) << " is not available." << std::endl;
+
+        cout << "Card of type " << cardTypeToString(type) << " is not available." << endl;
         return false;
     }
 
 
-    bool Catan::returnCard(const Player& player, CardType type, unsigned int amount) {
+    /**
+     * @brief Returns a specified number of cards of a specific type from a player.
+     *
+     * @param player The player who returns the cards.
+     * @param type The type of card to be returned.
+     * @param amount The number of cards to be returned.
+     * @return bool True if the cards were successfully returned, false otherwise.
+     */
+    bool Catan::returnCard(const Player &player, CardType type, unsigned int amount) {
         unsigned int counter = 0;
         std::vector<unsigned int> cardsToErase;
-        for (const auto& entry : cardOwnership) {
+        // Find the cards to be returned
+        for (const auto &entry: cardOwnership) {
             unsigned int card = entry.first;
             if ((cards[card]->getType() == type) && (entry.second->getName() == player.getName())) {
                 cardsToErase.push_back(card);
                 counter++;
             }
-            if(counter == amount) {
+            if (counter == amount) {
+                // Remove the cards from ownership
                 if (!cardsToErase.empty()) {
                     for (unsigned int card: cardsToErase) {
                         cardOwnership.erase(card);
                     }
                 }
 
-                // Optional to print that a player has returned a card
-//                if (type != CardType::LargestArmy){
-//                    cout << player.getName() << " has just returned " << amount << " " << cardTypeToString(type)
-//                         << " card/s to the bank." << endl;
-//                }
+                // Optional: Uncomment the line below to print that a player has returned a card
+                // if (type != CardType::LargestArmy) {
+                //     cout << player.getName() << " has just returned " << amount << " " << cardTypeToString(type)
+                //          << " card/s to the bank." << endl;
+                // }
                 return true;
             }
         }
@@ -175,21 +205,39 @@ namespace ariel {
         return false;
     }
 
-
-     unsigned int Catan::findAvailableCard(CardType type) {
+    /**
+     * @brief Finds an available card of a specific type.
+     *
+     * @param type The type of card to find.
+     * @return unsigned int The index of the available card, or cardNotAvailable if no card is available.
+     */
+    unsigned int Catan::findAvailableCard(CardType type) {
         for (unsigned int i = 0; i < cards.size(); i++) {
+            // Check if the card is of the desired type and not owned by anyone
             if (cards[i]->getType() == type && cardOwnership.find(i) == cardOwnership.end()) {
                 return i;
             }
         }
-        return 1000;
+
+        return cardNotAvailable;
     }
 
-    bool Catan::playerHasCards(const Player& player, CardType type, unsigned int amount) const {
+    /**
+     * @brief Checks if a player has a specified number of cards of a specific type.
+     *
+     * @param player The player to check.
+     * @param type The type of card to check for.
+     * @param amount The number of cards to check for.
+     * @return bool True if the player has at least the specified number of cards, false otherwise.
+     */
+    bool Catan::playerHasCards(const Player &player, CardType type, unsigned int amount) const {
         unsigned int count = 0;
-        for (const auto& entry : cardOwnership) {
+        // Count the number of cards of the specified type owned by the player
+        for (const auto &entry: cardOwnership) {
             if (entry.second->getName() == player.getName() && cards[entry.first]->getType() == type) {
                 count++;
+
+                // Check if the player have enough card
                 if (count >= amount) {
                     return true;
                 }
@@ -198,238 +246,311 @@ namespace ariel {
         return false;
     }
 
-    bool Catan::placeRoad(const Player& player, unsigned int pathIndex) {
 
-        if(pathIndex >= board.getPathAdjacenciesSize()){
+    /**
+  * @brief Places a road for the specified player at the given path index.
+  *
+  * @param player The player who is placing the road.
+  * @param pathIndex The index of the path where the road will be placed.
+  * @return bool True if the road is successfully placed, false otherwise.
+  */
+    bool Catan::placeRoad(const Player &player, unsigned int pathIndex) {
+        // Check if the path index is within bounds
+        if (pathIndex >= board.getPathAdjacenciesSize()) {
             std::cout << "Path index is out of bound." << std::endl;
             return false;
         }
 
+        // Check if the path is already occupied
         if (board.getPath(pathIndex).getOwner() != nullptr) {
             std::cout << "This path is already occupied." << std::endl;
             return false;
         }
 
+        // Check if the player has the required resources to build a road
         if (!playerHasCards(player, CardType::Lumber, 1) || !playerHasCards(player, CardType::Brick, 1)) {
             std::cout << "You don't have the required resources (1 Lumber and 1 Brick) to build a road." << std::endl;
             return false;
         }
 
+        // Deduct the required resources from the player's inventory
         returnCard(player, CardType::Lumber, 1);
         returnCard(player, CardType::Brick, 1);
-        if (player.getName() == player1.getName()){
+
+        // Assign the road to the correct player
+        if (player.getName() == player1.getName()) {
             board.getPath(pathIndex).setOwner(&player1);
         }
-        if (player.getName() == player2.getName()){
+        if (player.getName() == player2.getName()) {
             board.getPath(pathIndex).setOwner(&player2);
         }
-        if (player.getName() == player3.getName()){
+        if (player.getName() == player3.getName()) {
             board.getPath(pathIndex).setOwner(&player3);
         }
-        std::cout << player.getName() << ", your road has been placed on path " << pathIndex << "." << std::endl;
 
+        std::cout << player.getName() << ", your road has been placed on path " << pathIndex << "." << std::endl;
         return true;
     }
 
-    bool Catan::placeSettlement(const Player& player, unsigned int intersectionIndex) {
-        if(intersectionIndex >= board.getIntersectionAdjacenciesSize()){
+/**
+ * @brief Places a settlement for the specified player at the given intersection index.
+ *
+ * @param player The player who is placing the settlement.
+ * @param intersectionIndex The index of the intersection where the settlement will be placed.
+ * @return bool True if the settlement is successfully placed, false otherwise.
+ */
+    bool Catan::placeSettlement(const Player &player, unsigned int intersectionIndex) {
+        // Check if the intersection index is within bounds
+        if (intersectionIndex >= board.getIntersectionAdjacenciesSize()) {
             std::cout << "Intersection index is out of bound." << std::endl;
-            return  false;
+            return false;
         }
+
+        // Check if the intersection is already occupied
         if (board.getIntersection(intersectionIndex).getOwner() != nullptr) {
             std::cout << "Intersection " << intersectionIndex << " is already occupied." << std::endl;
             return false;
         }
 
-        for(const auto& path : board.getPathAdjacencies()){
-            if(path.first == intersectionIndex){
-                if(board.getIntersection(path.second).getOwner() != nullptr){
-                    std::cout << "Illegal place to place settlement. Too close to another settlement/city. Please try again." << std::endl;
-                    return false;
-                }
-            }
-            if(path.second == intersectionIndex) {
-                if (board.getIntersection(path.first).getOwner() != nullptr) {
-                    std::cout
-                            << "Illegal place to place settlement. Too close to another settlement/city. Please try again."
-                            << std::endl;
-                    return false;
-                }
+        // Check if the intersection is too close to another settlement or city
+        for (const auto &path: board.getPathAdjacencies()) {
+            if ((path.first == intersectionIndex && board.getIntersection(path.second).getOwner() != nullptr) ||
+                (path.second == intersectionIndex && board.getIntersection(path.first).getOwner() != nullptr)) {
+                std::cout
+                        << "Illegal place to place settlement. Too close to another settlement/city. Please try again."
+                        << std::endl;
+                return false;
             }
         }
 
-        bool hasAdjacentRoad;
-        hasAdjacentRoad = false;
-
+        // Check if the player has an adjacent road to the intersection
+        bool hasAdjacentRoad = false;
         for (unsigned int i = 0; i < board.getPathAdjacenciesSize(); i++) {
             auto intersections = board.getPath(i).getIntersections();
-            if ((board.getPath(i).getOwner() != nullptr) && (board.getPath(i).getOwner()->getName() == player.getName()) && ((intersections.first == intersectionIndex) || (intersections.second == intersectionIndex))) {
+            if ((board.getPath(i).getOwner() != nullptr) &&
+                (board.getPath(i).getOwner()->getName() == player.getName()) &&
+                ((intersections.first == intersectionIndex) || (intersections.second == intersectionIndex))) {
                 hasAdjacentRoad = true;
                 break;
             }
         }
         if (!hasAdjacentRoad) {
-            std::cout << "Illegal place to place settlement. You must have at least one road adjacent to the intersection. Please try again." << std::endl;
+            std::cout
+                    << "Illegal place to place settlement. You must have at least one road adjacent to the intersection. Please try again."
+                    << std::endl;
             return false;
         }
 
+        // Check if the player has the required resources to build a settlement
         if (!playerHasCards(player, CardType::Lumber, 1) ||
             !playerHasCards(player, CardType::Brick, 1) ||
             !playerHasCards(player, CardType::Wool, 1) ||
             !playerHasCards(player, CardType::Grain, 1)) {
-
-            std::cout << player.getName() << ", you not have the required resources (1 Lumber, 1 Brick, 1 Wool, and 1 Grain) to build a settlement." << std::endl;
+            std::cout << player.getName()
+                      << ", you do not have the required resources (1 Lumber, 1 Brick, 1 Wool, and 1 Grain) to build a settlement."
+                      << std::endl;
             return false;
         }
 
+        // Deduct the required resources from the player's inventory
         returnCard(player, CardType::Lumber, 1);
         returnCard(player, CardType::Brick, 1);
         returnCard(player, CardType::Wool, 1);
         returnCard(player, CardType::Grain, 1);
-        if (player.getName() == player1.getName()){
+
+        // Assign the settlement to the correct player
+        if (player.getName() == player1.getName()) {
             board.getIntersection(intersectionIndex).setStructure(Intersection::Structure::Settlement, player1);
         }
-        if (player.getName() == player2.getName()){
+        if (player.getName() == player2.getName()) {
             board.getIntersection(intersectionIndex).setStructure(Intersection::Structure::Settlement, player2);
         }
-        if (player.getName() == player3.getName()){
+        if (player.getName() == player3.getName()) {
             board.getIntersection(intersectionIndex).setStructure(Intersection::Structure::Settlement, player3);
         }
 
-        std::cout << player.getName() << ", your settlement has been placed on intersection " << intersectionIndex << "." << std::endl;
+        std::cout << player.getName() << ", your settlement has been placed on intersection " << intersectionIndex
+                  << "." << std::endl;
         addPoints(player, 1);
-
         return true;
-
     }
 
-
-    bool Catan::placeCity(const Player& player, unsigned int intersectionIndex) {
-        if(intersectionIndex >= board.getIntersectionAdjacenciesSize()){
+/**
+ * @brief Upgrades a settlement to a city for the specified player at the given intersection index.
+ *
+ * @param player The player who is upgrading the settlement to a city.
+ * @param intersectionIndex The index of the intersection where the settlement will be upgraded to a city.
+ * @return bool True if the city is successfully placed, false otherwise.
+ */
+    bool Catan::placeCity(const Player &player, unsigned int intersectionIndex) {
+        // Check if the intersection index is within bounds
+        if (intersectionIndex >= board.getIntersectionAdjacenciesSize()) {
             std::cout << "Intersection index is out of bound." << std::endl;
-            return  false;
+            return false;
         }
-        if ((board.getIntersection(intersectionIndex).getOwner() != nullptr) &&  board.getIntersection(intersectionIndex).getOwner()->getName() != player.getName()) {
+
+        // Check if the intersection is owned by the player
+        if ((board.getIntersection(intersectionIndex).getOwner() != nullptr) &&
+            (board.getIntersection(intersectionIndex).getOwner()->getName() != player.getName())) {
             std::cout << "This intersection is not owned by " << player.getName() << std::endl;
             return false;
         }
 
-        if(board.getIntersection(intersectionIndex).getStructure() != Intersection::Structure::Settlement){
-            std::cout << "Can't update to city because on the intersection there isn't a Settlement." << std::endl;
+        // Check if there is a settlement to upgrade
+        if (board.getIntersection(intersectionIndex).getStructure() != Intersection::Structure::Settlement) {
+            std::cout << "Can't upgrade to city because there isn't a Settlement on the intersection." << std::endl;
             return false;
         }
 
-        if (!playerHasCards(player, CardType::Ore, 3) ||
-            !playerHasCards(player, CardType::Grain, 2)) {
-
-            std::cout << "The player does not have the required resources (3 Ore and 2 Grain) to build a city." << std::endl;
+        // Check if the player has the required resources to build a city
+        if (!playerHasCards(player, CardType::Ore, 3) || !playerHasCards(player, CardType::Grain, 2)) {
+            std::cout << "The player does not have the required resources (3 Ore and 2 Grain) to build a city."
+                      << std::endl;
             return false;
         }
+
+        // Deduct the required resources from the player's inventory
         returnCard(player, CardType::Ore, 3);
         returnCard(player, CardType::Grain, 2);
-        if (player.getName() == player1.getName()){
+
+        // Assign the city to the correct player
+        if (player.getName() == player1.getName()) {
             board.getIntersection(intersectionIndex).setStructure(Intersection::Structure::City, player1);
         }
-        if (player.getName() == player2.getName()){
+        if (player.getName() == player2.getName()) {
             board.getIntersection(intersectionIndex).setStructure(Intersection::Structure::City, player2);
         }
-        if (player.getName() == player3.getName()){
+        if (player.getName() == player3.getName()) {
             board.getIntersection(intersectionIndex).setStructure(Intersection::Structure::City, player3);
         }
 
         std::cout << player.getName() << ", your city has been placed." << std::endl;
         addPoints(player, 1);
-
         return true;
-
     }
 
+    /**
+  * @brief Displays the current state of the game board, including intersections and roads.
+  */
     void Catan::displayBoard() const {
         board.showIntersections();
         board.showRoads();
     }
 
-    void Catan::showPlayerCards(const Player& player) const{
+/**
+ * @brief Displays the cards held by the specified player.
+ *
+ * @param player The player whose cards will be displayed.
+ */
+    void Catan::showPlayerCards(const Player &player) const {
+        std::unordered_map<CardType, int> cardCounts; // Map to store counts of each card type
+        unsigned totalCards = 0; // Total number of cards
 
-        std::unordered_map<CardType, int> cardCounts;
-        unsigned totalCards;
-
-        totalCards = 0;
-
-        for (const auto& entry : cardOwnership) {
+        // Iterate through card ownership to count the cards owned by the player
+        for (const auto &entry: cardOwnership) {
             if (entry.second->getName() == player.getName()) {
                 CardType cardType = cards.at(entry.first)->getType();
                 cardCounts[cardType]++;
                 totalCards++;
             }
         }
+
+        // Display the cards
         if (totalCards > 0) {
             std::cout << std::endl << player.getName() << " has the following cards:" << std::endl;
             for (const auto &count: cardCounts) {
                 std::cout << cardTypeToString(count.first) << ": " << count.second << std::endl;
             }
-        }
-        else {
+        } else {
             std::cout << std::endl << player.getName() << " has no cards." << std::endl;
         }
-
     }
 
-    std::string Catan::cardTypeToString(CardType cardType) const{
+/**
+ * @brief Converts a CardType enum value to its corresponding string representation.
+ *
+ * @param cardType The CardType enum value.
+ * @return std::string The string representation of the CardType.
+ */
+    std::string Catan::cardTypeToString(CardType cardType) const {
         switch (cardType) {
-            case CardType::Lumber: return "Lumber";
-            case CardType::Brick: return "Brick";
-            case CardType::Wool: return "Wool";
-            case CardType::Grain: return "Grain";
-            case CardType::Ore: return "Ore";
-            case CardType::Knight: return "Knight";
-            case CardType::VictoryPoint: return "Victory Point";
-            case CardType::RoadBuilding: return "Road Building";
-            case CardType::YearOfPlenty: return "Year of Plenty";
-            case CardType::Monopoly: return "Monopoly";
-            case CardType::LargestArmy: return "Largest Army";
-            default: return "Unknown";
+            case CardType::Lumber:
+                return "Lumber";
+            case CardType::Brick:
+                return "Brick";
+            case CardType::Wool:
+                return "Wool";
+            case CardType::Grain:
+                return "Grain";
+            case CardType::Ore:
+                return "Ore";
+            case CardType::Knight:
+                return "Knight";
+            case CardType::VictoryPoint:
+                return "Victory Point";
+            case CardType::RoadBuilding:
+                return "Road Building";
+            case CardType::YearOfPlenty:
+                return "Year of Plenty";
+            case CardType::Monopoly:
+                return "Monopoly";
+            case CardType::LargestArmy:
+                return "Largest Army";
+            default:
+                return "Unknown";
         }
     }
 
+/**
+ * @brief Displays the points of all players.
+ */
     void Catan::displayPoints() {
-        cout << endl << "Scoreboard:" << endl;
-        cout << player1.getName() << " has " << player1.getPoints() << " points" << endl;
-        cout << player2.getName() << " has " << player2.getPoints() << " points" << endl;
-        cout << player3.getName() << " has " << player3.getPoints() << " points" << endl;
+        std::cout << std::endl << "Scoreboard:" << std::endl;
+        std::cout << player1.getName() << " has " << player1.getPoints() << " points" << std::endl;
+        std::cout << player2.getName() << " has " << player2.getPoints() << " points" << std::endl;
+        std::cout << player3.getName() << " has " << player3.getPoints() << " points" << std::endl;
     }
 
-    void Catan::addPoints(const Player& player, unsigned int points) {
-        if(player.getName() == player1.getName()){
+/**
+ * @brief Adds points to the specified player.
+ *
+ * @param player The player to whom points will be added.
+ * @param points The number of points to add.
+ */
+    void Catan::addPoints(const Player &player, unsigned int points) {
+        if (player.getName() == player1.getName()) {
             player1.addPoints(points);
         }
-        if(player.getName() == player2.getName()){
+        if (player.getName() == player2.getName()) {
             player2.addPoints(points);
         }
-        if(player.getName() == player3.getName()){
+        if (player.getName() == player3.getName()) {
             player3.addPoints(points);
         }
     }
 
-
+/**
+ * @brief Distributes resources to players based on the dice result.
+ *
+ * @param diceResult The result of the dice roll.
+ */
     void Catan::distributeResources(unsigned int diceResult) {
-
         CardType hexCard;
 
         // Step 1: Identify all hexagons with the given dice result
-        std::vector<Hexagon> matchingHexagons;
-        for (const auto& hex : board.getHexagons()) {
+        std::vector <Hexagon> matchingHexagons;
+        for (const auto &hex: board.getHexagons()) {
             if (hex.getNumber() == diceResult) {
                 matchingHexagons.push_back(hex);
             }
         }
 
         // Step 2: Iterate through all intersections
-        for (const auto& intersection : board.getIntersections()) {
+        for (const auto &intersection: board.getIntersections()) {
             bool adjacentToMatchingHexagon = false;
 
             // Check if the intersection is adjacent to any matching hexagon
-            for (const auto& hex : matchingHexagons) {
+            for (const auto &hex: matchingHexagons) {
                 if (intersection.isAdjacentTo(hex)) {
                     adjacentToMatchingHexagon = true;
                     hexCard = hex.getType();
@@ -440,12 +561,11 @@ namespace ariel {
             // Step 3: Allocate resources if the intersection is adjacent to a matching hexagon
             if (adjacentToMatchingHexagon) {
                 Intersection::Structure structure = intersection.getStructure();
-                Player* owner = intersection.getOwner();
+                Player *owner = intersection.getOwner();
                 if (owner != nullptr) {
                     if (structure == Intersection::Structure::Settlement) {
                         takeCard(*owner, hexCard);
-                    }
-                    else if (structure == Intersection::Structure::City) {
+                    } else if (structure == Intersection::Structure::City) {
                         takeCard(*owner, hexCard);
                         takeCard(*owner, hexCard);
                     }
@@ -454,41 +574,52 @@ namespace ariel {
         }
     }
 
-    bool Catan::buyDevCard(const Player& player) {
-
-        // Check if the player has the relevant resource cards to by a development card
+/**
+ * @brief Allows a player to buy a development card.
+ *
+ * @param player The player who is buying the development card.
+ * @return bool True if the development card is successfully bought, false otherwise.
+ */
+    bool Catan::buyDevCard(const Player &player) {
+        // Check if the player has the relevant resource cards to buy a development card
         if (!playerHasCards(player, CardType::Ore, 1) ||
             !playerHasCards(player, CardType::Grain, 1) ||
             !playerHasCards(player, CardType::Wool, 1)) {
-
-            std::cout << "The player does not have the required resources (1 Ore, 1 Grain and 1 Wool) to buy a development card." << std::endl;
+            std::cout
+                    << "The player does not have the required resources (1 Ore, 1 Grain, and 1 Wool) to buy a development card."
+                    << std::endl;
             return false;
         }
 
+        // Count the available development cards of each type
         std::vector<unsigned int> devCardTypeCounter(5, 0);
-
         for (unsigned int i = 0; i < cards.size(); i++) {
             if (cardOwnership.find(i) == cardOwnership.end()) {
-                if (cards[i]->getType() == CardType::Knight){
-                    devCardTypeCounter[0] += 1;
-                }
-                if (cards[i]->getType() == CardType::VictoryPoint){
-                    devCardTypeCounter[1] += 1;
-                }
-                if (cards[i]->getType() == CardType::RoadBuilding){
-                    devCardTypeCounter[2] += 1;
-                }
-                if (cards[i]->getType() == CardType::YearOfPlenty){
-                    devCardTypeCounter[3] += 1;
-                }
-                if (cards[i]->getType() == CardType::Monopoly){
-                    devCardTypeCounter[4] += 1;
+                switch (cards[i]->getType()) {
+                    case CardType::Knight:
+                        devCardTypeCounter[0]++;
+                        break;
+                    case CardType::VictoryPoint:
+                        devCardTypeCounter[1]++;
+                        break;
+                    case CardType::RoadBuilding:
+                        devCardTypeCounter[2]++;
+                        break;
+                    case CardType::YearOfPlenty:
+                        devCardTypeCounter[3]++;
+                        break;
+                    case CardType::Monopoly:
+                        devCardTypeCounter[4]++;
+                        break;
+                    default:
+                        break;
                 }
             }
         }
-        unsigned int sumOfDevCards = static_cast<unsigned int>(std::accumulate(devCardTypeCounter.begin(), devCardTypeCounter.end(), 0));
-        if (sumOfDevCards == 0){
-            std::cout << "\nThere are no further development cards in the pack." << endl;
+        unsigned int sumOfDevCards = static_cast<unsigned int>(std::accumulate(devCardTypeCounter.begin(),
+                                                                               devCardTypeCounter.end(), 0));
+        if (sumOfDevCards == 0) {
+            std::cout << "\nThere are no further development cards in the pack." << std::endl;
             return false;
         }
 
@@ -497,12 +628,9 @@ namespace ariel {
         returnCard(player, CardType::Grain, 1);
         returnCard(player, CardType::Wool, 1);
 
-        unsigned int index;
-
-        // Generate a random number between 1 and sumOfDevCards
+        // Generate a random number to determine which development card the player receives
         int randNum = rand() % static_cast<int>(sumOfDevCards) + 1;
-
-        // Find the corresponding card type
+        unsigned int index = 0;
         unsigned int cumulativeSum = 0;
         for (unsigned int i = 0; i < devCardTypeCounter.size(); ++i) {
             cumulativeSum += devCardTypeCounter[i];
@@ -512,107 +640,79 @@ namespace ariel {
             }
         }
 
-        // take a development Card
-        if(index == 0){
-            takeCard(player, CardType::Knight);
-            manageLargestArmyCard(); // Manage the Largest Army Card logic and prints status
+        // Assign the development card to the player
+        switch (index) {
+            case 0:
+                takeCard(player, CardType::Knight);
+                manageLargestArmyCard(); // Manage the Largest Army Card logic and print status
+                break;
+            case 1:
+                takeCard(player, CardType::VictoryPoint);
+                addPoints(player, 1);
+                break;
+            case 2:
+                takeCard(player, CardType::RoadBuilding);
+                takeCard(player, CardType::Brick);
+                takeCard(player, CardType::Brick);
+                takeCard(player, CardType::Lumber);
+                takeCard(player, CardType::Lumber);
+                break;
+            case 3:
+                takeCard(player, CardType::YearOfPlenty);
+                playYearOfPlentyCard();
+                playYearOfPlentyCard();
+                break;
+            case 4:
+                takeCard(player, CardType::Monopoly);
+                playMonopolyCard();
+                break;
+            default:
+                break;
         }
-        if(index == 1){
-            takeCard(player, CardType::VictoryPoint);
-            if(player.getName() == player1.getName()){
-                addPoints(player1,1);
-            }
-            if(player.getName() == player2.getName()){
-                addPoints(player2,1);
-            }
-            if(player.getName() == player3.getName()){
-                addPoints(player3,1);
-            }
-        }
-        if(index == 2){
-            takeCard(player, CardType::RoadBuilding);
-            takeCard(player, CardType::Brick);
-            takeCard(player, CardType::Brick);
-            takeCard(player, CardType::Lumber);
-            takeCard(player, CardType::Lumber);
-        }
-        if(index == 3){
-            takeCard(player, CardType::YearOfPlenty);
-            playYearOfPlentyCard();
-            playYearOfPlentyCard();
-        }
-        if(index == 4){
-            takeCard(player, CardType::Monopoly);
-            playMonopolyCard();
-        }
-        nextPlayer(); // Next player turn
-
+        nextPlayer(); // Next player's turn
         return true;
     }
 
-    void Catan::manageLargestArmyCard(){
+    /**
+    * @brief Manages the Largest Army Card by checking the player with the most knights and awarding the card.
+    */
+    void Catan::manageLargestArmyCard() {
         // Check eligibility for largest army
+        Player *playerWithMostKnights = nullptr;
+        const unsigned int minimumKnightsForLargestArmy = 3; // Must have more than 3 Knight cards
+        unsigned int maxKnights = minimumKnightsForLargestArmy;
 
-        Player* playerWithMostKnights = nullptr;
-
-        const unsigned int minimumKnighsForLargestArmy = 3; // Must have more than 3 Knight cards
-
-        unsigned int maxKnights = minimumKnighsForLargestArmy;
-
-        if (player1.getKnights() >= maxKnights) {
-            maxKnights = player1.getKnights();
-            playerWithMostKnights = &player1;
-        }
-
-        if (player2.getKnights() >= maxKnights) {
-            maxKnights = player2.getKnights();
-            playerWithMostKnights = &player2;
-        }
-
-        if (player3.getKnights() >= maxKnights) {
-            playerWithMostKnights = &player3;
+        // Find the player with the most knights
+        Player *players[] = {&player1, &player2, &player3};
+        for (Player *player: players) {
+            if (player->getKnights() >= maxKnights) {
+                maxKnights = player->getKnights();
+                playerWithMostKnights = player;
+            }
         }
 
         // The previous player returns the card
-        if (playerHasCards(player1, CardType::LargestArmy, 1)){
-            returnCard(player1, CardType::LargestArmy, 1);
-            player1.reducePoints(2);
-        }
-        if (playerHasCards(player2, CardType::LargestArmy, 1)){
-            returnCard(player2, CardType::LargestArmy, 1);
-            player2.reducePoints(2);
-        }
-        if (playerHasCards(player3, CardType::LargestArmy, 1)){
-            returnCard(player3, CardType::LargestArmy, 1);
-            player3.reducePoints(2);
+        for (Player *player: players) {
+            if (playerHasCards(*player, CardType::LargestArmy, 1)) {
+                returnCard(*player, CardType::LargestArmy, 1);
+                player->reducePoints(2);
+            }
         }
 
-        // Add two victory points and grant the Largest Army Card
-        if (playerWithMostKnights != nullptr){
-
-            if (playerWithMostKnights->getName() == player1.getName()){
-                takeCard(player1, CardType::LargestArmy);
-                player1.addPoints(2);
-            }
-            if (playerWithMostKnights->getName() == player2.getName()){
-
-                takeCard(player2, CardType::LargestArmy);
-                player2.addPoints(2);
-            }
-            if (playerWithMostKnights->getName() == player3.getName()){
-                takeCard(player3, CardType::LargestArmy);
-                player3.addPoints(2);
-            }
+        // Add two victory points and grant the Largest Army Card to the new player
+        if (playerWithMostKnights != nullptr) {
+            takeCard(*playerWithMostKnights, CardType::LargestArmy);
+            playerWithMostKnights->addPoints(2);
         }
     }
 
-
+    /**
+    * @brief Allows the current player to play a Monopoly card and choose a resource to monopolize.
+    */
     void Catan::playMonopolyCard() {
         while (true) {
             std::cout << std::endl;
-            std::cout << turn.getName() << ", please choose a resource for your monopoly." << std::endl
-                      << std::endl;
-            std::cout << "Choose resource: " << std::endl;
+            std::cout << turn.getName() << ", please choose a resource for your monopoly." << std::endl;
             std::cout << "1. Lumber" << std::endl;
             std::cout << "2. Brick" << std::endl;
             std::cout << "3. Wool" << std::endl;
@@ -646,9 +746,14 @@ namespace ariel {
         }
     }
 
-
-    void Catan::takeMonopoly(const Player& player, CardType type){
-        for (auto& entry : cardOwnership) {
+    /**
+     * @brief Transfers all cards of a specific type from other players to the player who played the Monopoly card.
+     *
+     * @param player The player who played the Monopoly card.
+     * @param type The type of card to monopolize.
+     */
+    void Catan::takeMonopoly(const Player &player, CardType type) {
+        for (auto &entry: cardOwnership) {
             unsigned int cardId = entry.first;
             auto card = cards[cardId];
             if (card->getType() == type) {
@@ -658,11 +763,13 @@ namespace ariel {
         returnCard(player, CardType::Monopoly, 1);
     }
 
+    /**
+     * @brief Allows the current player to play a Year of Plenty card and choose a resource to receive.
+     */
     void Catan::playYearOfPlentyCard() {
         while (true) {
             std::cout << std::endl;
-            std::cout << turn.getName() << ", please choose a resource for your monopoly.\n" << std::endl;
-            std::cout << "Choose resource: " << std::endl;
+            std::cout << turn.getName() << ", please choose a resource for your Year of Plenty.\n" << std::endl;
             std::cout << "1. Lumber" << std::endl;
             std::cout << "2. Brick" << std::endl;
             std::cout << "3. Wool" << std::endl;
@@ -696,12 +803,15 @@ namespace ariel {
         }
     }
 
-    unsigned int Catan::countPlayerResourceCards(const Player& player) const{
-
-        unsigned int totalCards;
-
-        totalCards = 0;
-        for (const auto& entry : cardOwnership) {
+    /**
+     * @brief Counts the number of resource cards a player has.
+     *
+     * @param player The player whose resource cards are to be counted.
+     * @return unsigned int The total number of resource cards the player has.
+     */
+    unsigned int Catan::countPlayerResourceCards(const Player &player) const {
+        unsigned int totalCards = 0;
+        for (const auto &entry: cardOwnership) {
             CardType cardType = cards.at(entry.first)->getType();
             if (entry.second->getName() == player.getName() && isResourceCard(cardType)) {
                 totalCards++;
@@ -710,45 +820,54 @@ namespace ariel {
         return totalCards;
     }
 
-   bool Catan::isResourceCard(CardType type) const{
-        if (type == CardType::Lumber || type == CardType::Brick || type == CardType::Grain || type == CardType::Wool || type == CardType::Ore){
-            return true;
-        }
-       return false;
+    /**
+     * @brief Checks if a given CardType is a resource card.
+     *
+     * @param type The CardType to check.
+     * @return bool True if the CardType is a resource card, false otherwise.
+     */
+    bool Catan::isResourceCard(CardType type) const {
+        return (type == CardType::Lumber || type == CardType::Brick || type == CardType::Grain ||
+                type == CardType::Wool || type == CardType::Ore);
     }
 
-    void Catan::handleSeven(){
-        unsigned int numOfResourceCardsforPlayer1 = countPlayerResourceCards(player1);
-        if(numOfResourceCardsforPlayer1 > 7){
-            unsigned int numOfCardsToReturn = numOfResourceCardsforPlayer1 / 2;
-            for(unsigned int i=0; i<numOfCardsToReturn ; i++){
-                menuForDiceSeven(player1);
+    /**
+     * @brief Helper function to handle the return of resource cards when a 7 is rolled.
+     *
+     * @param player The player who needs to return cards.
+     */
+    void Catan::handleReturnCardsForSeven(Player &player) {
+        unsigned int numOfResourceCards = countPlayerResourceCards(player);
+        if (numOfResourceCards > 7) {
+            unsigned int numOfCardsToReturn = numOfResourceCards / 2;
+            for (unsigned int i = 0; i < numOfCardsToReturn; i++) {
+                menuForDiceSeven(player);
             }
         }
-        unsigned int numOfResourceCardsforPlayer2 = countPlayerResourceCards(player2);
-        if(numOfResourceCardsforPlayer2 > 7){
-            unsigned int numOfCardsToReturn = numOfResourceCardsforPlayer2 / 2;
-            for(unsigned int i=0; i<numOfCardsToReturn ; i++){
-                menuForDiceSeven(player2);
-            }
-        }
-        unsigned int numOfResourceCardsforPlayer3 = countPlayerResourceCards(player3);
-        if(numOfResourceCardsforPlayer3 > 7){
-            unsigned int numOfCardsToReturn = numOfResourceCardsforPlayer3 / 2;
-            for(unsigned int i=0; i<numOfCardsToReturn ; i++){
-                menuForDiceSeven(player3);
-            }
-        }
+    }
+
+    /**
+     * @brief Handles the event when a 7 is rolled, forcing players with more than 7 cards to return half of them.
+     */
+    void Catan::handleSeven() {
+        handleReturnCardsForSeven(player1);
+        handleReturnCardsForSeven(player2);
+        handleReturnCardsForSeven(player3);
+
         std::cout << "\nDice 7 handling has been completed.\n" << std::endl;
     }
 
 
-    void Catan::menuForDiceSeven(const Player& player) {
+    /**
+     * @brief Displays a menu for the player to choose a resource card to return to the bank when a 7 is rolled.
+     *
+     * @param player The player who needs to return cards.
+     */
+    void Catan::menuForDiceSeven(const Player &player) {
         bool returnSuccess;
         while (true) {
             std::cout << std::endl;
             std::cout << player.getName() << ", please choose a resource to return to the bank.\n" << std::endl;
-            std::cout << "Choose resource: " << std::endl;
             std::cout << "1. Lumber" << std::endl;
             std::cout << "2. Brick" << std::endl;
             std::cout << "3. Wool" << std::endl;
@@ -762,16 +881,16 @@ namespace ariel {
                     returnSuccess = returnCard(player, CardType::Lumber, 1);
                     break;
                 case 2:
-                    returnSuccess = returnCard(player, CardType::Brick,1);
+                    returnSuccess = returnCard(player, CardType::Brick, 1);
                     break;
                 case 3:
-                    returnSuccess = returnCard(player, CardType::Wool,1);
+                    returnSuccess = returnCard(player, CardType::Wool, 1);
                     break;
                 case 4:
-                    returnSuccess = returnCard(player, CardType::Grain,1);
+                    returnSuccess = returnCard(player, CardType::Grain, 1);
                     break;
                 case 5:
-                    returnSuccess = returnCard(player, CardType::Ore,1);
+                    returnSuccess = returnCard(player, CardType::Ore, 1);
                     break;
                 default:
                     std::cout << "Invalid choice. Please try again." << std::endl;
@@ -782,9 +901,13 @@ namespace ariel {
         }
     }
 
-
+    /**
+     * @brief Allows the player to trade cards with other players.
+     *
+     * @param player The player who initiates the trade.
+     */
     void Catan::tradeCards(const Player &player) {
-        std::vector<Player*> playerSelection = {&player1, &player2, &player3};
+        std::vector < Player * > playerSelection = {&player1, &player2, &player3};
         CardType giveResource, getResource;
         unsigned int giveAmount, getAmount;
         unsigned int choice;
@@ -841,17 +964,24 @@ namespace ariel {
             returnCard(player, giveResource, giveAmount);
 
             // Then, take the cards
-            for(unsigned int i=0 ; i<giveAmount ; i++){
+            for (unsigned int i = 0; i < giveAmount; i++) {
                 takeCard(otherPlayer, giveResource);
             }
-            for(unsigned int i=0 ; i<getAmount ; i++) {
+            for (unsigned int i = 0; i < getAmount; i++) {
                 takeCard(player, getResource);
             }
             std::cout << "Trade completed successfully!\n";
-        }
-
-        else {
+        } else {
             std::cout << "Trade rejected.\n";
         }
+    }
+
+    /**
+     * @brief Retrieves the current state of the game board.
+     *
+     * @return Board The current game board.
+     */
+    Board Catan::getBoard() {
+        return board;
     }
 }

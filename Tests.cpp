@@ -13,6 +13,7 @@
 #include "DevelopmentCard.hpp"
 #include "SpecialCard.hpp"
 #include "Dice.hpp"
+#include <set>
 
 using namespace ariel;
 
@@ -47,11 +48,18 @@ TEST_CASE("CardType tests") {
 
 TEST_CASE("Dice tests") {
     ariel::Dice dice;
+    std::set<unsigned int> rolledNumbers;
 
-    for (int i = 0; i < 100; ++i) {
+    for (int i = 0; i < 200; ++i) {
         unsigned int roll = dice.roll();
         CHECK(roll >= 1);
         CHECK(roll <= 6);
+        rolledNumbers.insert(roll);
+    }
+
+    // Ensure that all numbers from 1 to 6 have been rolled at least once
+    for (unsigned int num = 1; num <= 6; ++num) {
+        CHECK(rolledNumbers.count(num) > 0);
     }
 }
 
@@ -72,14 +80,14 @@ TEST_CASE("Board initialization") {
 }
 
 TEST_CASE("Catan game tests") {
-    ariel::Player p1("Player1");
-    ariel::Player p2("Player2");
-    ariel::Player p3("Player3");
+    ariel::Player p1("Alice");
+    ariel::Player p2("Bob");
+    ariel::Player p3("Charlie");
 
     ariel::Catan game(p1, p2, p3);
 
     game.ChooseStartingPlayer();
-    CHECK(game.checkTurn()->getName() == "Player1");
+    CHECK(game.checkTurn()->getName() == "Alice");
 
     game.handFirstCards();
     CHECK(game.playerHasCards(p1, ariel::CardType::Lumber, 4));
@@ -101,7 +109,7 @@ TEST_CASE("Catan game tests") {
 }
 
 TEST_CASE("Intersection tests") {
-    ariel::Player p1("Player1");
+    ariel::Player p1("Alice");
     ariel::Intersection intersection(1);
 
     CHECK(intersection.getIndex() == 1);
@@ -117,7 +125,7 @@ TEST_CASE("Intersection tests") {
 }
 
 TEST_CASE("Path tests") {
-    ariel::Player p1("Player1");
+    ariel::Player p1("Alice");
     ariel::Path path(1, 0, 1);
 
     CHECK(path.getIndex() == 1);
@@ -132,9 +140,9 @@ TEST_CASE("Path tests") {
 }
 
 TEST_CASE("Largest Army Card Management") {
-    ariel::Player p1("Player1");
-    ariel::Player p2("Player2");
-    ariel::Player p3("Player3");
+    ariel::Player p1("Alice");
+    ariel::Player p2("Bob");
+    ariel::Player p3("Charlie");
 
     ariel::Catan game(p1, p2, p3);
 
@@ -153,4 +161,67 @@ TEST_CASE("Largest Army Card Management") {
     game.manageLargestArmyCard();
     CHECK_FALSE(game.playerHasCards(p1, ariel::CardType::LargestArmy, 1));
     CHECK(game.playerHasCards(p2, ariel::CardType::LargestArmy, 1));
+}
+
+TEST_CASE("Settlement and City placement tests") {
+    ariel::Player p1("Alice");
+    ariel::Player p2("Bob");
+    ariel::Player p3("Charlie");
+
+    ariel::Catan game(p1, p2, p3);
+
+    game.handFirstCards();
+
+    // Place initial roads and settlements
+    game.placeRoad(p1, 13);
+    game.placeRoad(p1, 41);
+    game.placeSettlement(p1, 10);
+    game.placeSettlement(p1, 29);
+
+    game.nextPlayer();
+    game.placeRoad(p2, 56);
+    game.placeRoad(p2, 52);
+    game.placeSettlement(p2, 40);
+    game.placeSettlement(p2, 44);
+
+    game.nextPlayer();
+    game.placeRoad(p3, 15);
+    game.placeRoad(p3, 58);
+    game.placeSettlement(p3, 13);
+    game.placeSettlement(p3, 42);
+
+    game.nextPlayer(); // Back to Alice
+
+    // Give players enough resources for a city
+    game.takeCard(p1, ariel::CardType::Ore);
+    game.takeCard(p1, ariel::CardType::Ore);
+    game.takeCard(p1, ariel::CardType::Ore);
+    game.takeCard(p1, ariel::CardType::Grain);
+    game.takeCard(p1, ariel::CardType::Grain);
+
+    game.takeCard(p2, ariel::CardType::Ore);
+    game.takeCard(p2, ariel::CardType::Ore);
+    game.takeCard(p2, ariel::CardType::Ore);
+    game.takeCard(p2, ariel::CardType::Grain);
+    game.takeCard(p2, ariel::CardType::Grain);
+
+    game.takeCard(p3, ariel::CardType::Ore);
+    game.takeCard(p3, ariel::CardType::Ore);
+    game.takeCard(p3, ariel::CardType::Ore);
+    game.takeCard(p3, ariel::CardType::Grain);
+    game.takeCard(p3, ariel::CardType::Grain);
+
+    // Try placing a city where there is no settlement
+    CHECK_FALSE(game.placeCity(p1, 20));
+
+    // Try placing a city on a settlement that does not belong to the player
+    CHECK_FALSE(game.placeCity(p1, 40));
+
+    // Place a city on the player's own settlement
+    CHECK(game.placeCity(p1, 10));
+
+    // Verify the city was placed
+    auto& intersection = game.getBoard().getIntersection(10);
+    CHECK(intersection.getStructure() == ariel::Intersection::City);
+    CHECK(intersection.getOwner()->getName() == p1.getName());
 }

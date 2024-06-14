@@ -59,7 +59,7 @@ int main(){
     std::cout << std::endl << "Initial placements are completed." << std::endl;
     std::cout << std::endl << "Let the game begin!" << std::endl;
 
-    // Distribute resources from adjacent hexagons to all players based on the dice roll
+    // Distribute resources from adjacent hexagons to all players based on all possible dice rolls
     for(unsigned int i = 2; i <= 12; i++) {
         catanGame.distributeResources(i);
     }
@@ -96,14 +96,14 @@ int main(){
     catanGame.displayBoard();
 
     // Show the cards held by each player
-    std::cout << player1.getName() << " has the cards: " << std::endl;
     catanGame.showPlayerCards(player1);
 
-    std::cout << player2.getName() << " has the cards: " << std::endl;
     catanGame.showPlayerCards(player2);
 
-    std::cout << player3.getName() << " has the cards: " << std::endl;
     catanGame.showPlayerCards(player3);
+
+    // Show the points of each player
+    catanGame.displayPoints();
 
     return 0;
 }

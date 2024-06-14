@@ -77,8 +77,8 @@ namespace ariel {
      */
     Player Catan::nextPlayer() {
         // Check if the player has won
-        if (turn.getPoints() >= 10) {
-            cout << endl << turn.getName() << " is the winner with " << turn.getPoints() << " victory points!!" << endl;
+        if (turn.getPoints() >= minPointsToWin) {
+            cout << endl << turn.getName() << " is the winner with " << turn.getPoints() << " victory points!!!" << endl;
             cout << endl << "GAME OVER!" << endl;
             exit(EXIT_SUCCESS);
         }
@@ -87,10 +87,14 @@ namespace ariel {
         if (turn.getName() == player1.getName()) {
             turn = player2;
             return player2;
-        } else if (turn.getName() == player2.getName()) {
+        }
+
+        else if (turn.getName() == player2.getName()) {
             turn = player3;
             return player3;
-        } else {
+        }
+
+        else {
             turn = player1;
             return player1;
         }
@@ -178,6 +182,7 @@ namespace ariel {
     bool Catan::returnCard(const Player &player, CardType type, unsigned int amount) {
         unsigned int counter = 0;
         std::vector<unsigned int> cardsToErase;
+
         // Find the cards to be returned
         for (const auto &entry: cardOwnership) {
             unsigned int card = entry.first;
@@ -277,15 +282,15 @@ namespace ariel {
         returnCard(player, CardType::Lumber, 1);
         returnCard(player, CardType::Brick, 1);
 
+        // List of players
+        std::vector<Player*> players = {&player1, &player2, &player3};
+
         // Assign the road to the correct player
-        if (player.getName() == player1.getName()) {
-            board.getPath(pathIndex).setOwner(&player1);
-        }
-        if (player.getName() == player2.getName()) {
-            board.getPath(pathIndex).setOwner(&player2);
-        }
-        if (player.getName() == player3.getName()) {
-            board.getPath(pathIndex).setOwner(&player3);
+        for (Player* p : players) {
+            if (player.getName() == p->getName()) {
+                board.getPath(pathIndex).setOwner(p);
+                break;
+            }
         }
 
         std::cout << player.getName() << ", your road has been placed on path " << pathIndex << "." << std::endl;
@@ -358,15 +363,14 @@ namespace ariel {
         returnCard(player, CardType::Wool, 1);
         returnCard(player, CardType::Grain, 1);
 
+        std::vector<Player*> players = {&player1, &player2, &player3};
+
         // Assign the settlement to the correct player
-        if (player.getName() == player1.getName()) {
-            board.getIntersection(intersectionIndex).setStructure(Intersection::Structure::Settlement, player1);
-        }
-        if (player.getName() == player2.getName()) {
-            board.getIntersection(intersectionIndex).setStructure(Intersection::Structure::Settlement, player2);
-        }
-        if (player.getName() == player3.getName()) {
-            board.getIntersection(intersectionIndex).setStructure(Intersection::Structure::Settlement, player3);
+        for (Player* p : players) {
+            if (player.getName() == p->getName()) {
+                board.getIntersection(intersectionIndex).setStructure(Intersection::Structure::Settlement, *p);
+                break;
+            }
         }
 
         std::cout << player.getName() << ", your settlement has been placed on intersection " << intersectionIndex
@@ -414,15 +418,15 @@ namespace ariel {
         returnCard(player, CardType::Grain, 2);
 
         // Assign the city to the correct player
-        if (player.getName() == player1.getName()) {
-            board.getIntersection(intersectionIndex).setStructure(Intersection::Structure::City, player1);
+        std::vector<Player*> players = {&player1, &player2, &player3};
+
+        for (Player* p : players) {
+            if (player.getName() == p->getName()) {
+                board.getIntersection(intersectionIndex).setStructure(Intersection::Structure::City, *p);
+                break;
+            }
         }
-        if (player.getName() == player2.getName()) {
-            board.getIntersection(intersectionIndex).setStructure(Intersection::Structure::City, player2);
-        }
-        if (player.getName() == player3.getName()) {
-            board.getIntersection(intersectionIndex).setStructure(Intersection::Structure::City, player3);
-        }
+
 
         std::cout << player.getName() << ", your city has been placed." << std::endl;
         addPoints(player, 1);
@@ -444,7 +448,7 @@ namespace ariel {
  */
     void Catan::showPlayerCards(const Player &player) const {
         std::unordered_map<CardType, int> cardCounts; // Map to store counts of each card type
-        unsigned totalCards = 0; // Total number of cards
+        unsigned int totalCards = 0; // Total number of cards
 
         // Iterate through card ownership to count the cards owned by the player
         for (const auto &entry: cardOwnership) {
@@ -461,7 +465,9 @@ namespace ariel {
             for (const auto &count: cardCounts) {
                 std::cout << cardTypeToString(count.first) << ": " << count.second << std::endl;
             }
-        } else {
+        }
+
+        else {
             std::cout << std::endl << player.getName() << " has no cards." << std::endl;
         }
     }
@@ -506,9 +512,14 @@ namespace ariel {
  */
     void Catan::displayPoints() {
         std::cout << std::endl << "Scoreboard:" << std::endl;
-        std::cout << player1.getName() << " has " << player1.getPoints() << " points" << std::endl;
-        std::cout << player2.getName() << " has " << player2.getPoints() << " points" << std::endl;
-        std::cout << player3.getName() << " has " << player3.getPoints() << " points" << std::endl;
+
+        std::vector<Player*> players = {&player1, &player2, &player3};
+
+        // Print each player points
+        for (Player* p : players) {
+            std::cout << p->getName() << " has " << p->getPoints() << " points" << std::endl;
+        }
+
     }
 
 /**
@@ -518,15 +529,15 @@ namespace ariel {
  * @param points The number of points to add.
  */
     void Catan::addPoints(const Player &player, unsigned int points) {
-        if (player.getName() == player1.getName()) {
-            player1.addPoints(points);
+        std::vector<Player*> players = {&player1, &player2, &player3};
+
+        for (Player* p : players) {
+            if (player.getName() == p->getName()) {
+                p->addPoints(points);
+                break;
+            }
         }
-        if (player.getName() == player2.getName()) {
-            player2.addPoints(points);
-        }
-        if (player.getName() == player3.getName()) {
-            player3.addPoints(points);
-        }
+
     }
 
 /**
@@ -850,9 +861,12 @@ namespace ariel {
      * @brief Handles the event when a 7 is rolled, forcing players with more than 7 cards to return half of them.
      */
     void Catan::handleSeven() {
-        handleReturnCardsForSeven(player1);
-        handleReturnCardsForSeven(player2);
-        handleReturnCardsForSeven(player3);
+        std::vector<Player*> players = {&player1, &player2, &player3};
+
+        for (Player* p : players) {
+            handleReturnCardsForSeven(*p);
+        }
+
 
         std::cout << "\nDice 7 handling has been completed.\n" << std::endl;
     }

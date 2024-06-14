@@ -49,6 +49,7 @@ namespace ariel {
         void handleReturnCardsForSeven(Player& player);
 
         const unsigned int cardNotAvailable = 1000; // Represent card not available
+        const unsigned int minPointsToWin = 10; // minimum of points required
 
     public:
         /**

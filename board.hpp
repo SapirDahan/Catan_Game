@@ -7,7 +7,6 @@
 
 #pragma once
 #include <string>
-
 #include <vector>
 #include "Hexagon.hpp"
 #include "Intersection.hpp"

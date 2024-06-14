@@ -14,16 +14,22 @@
 #include "SpecialCard.hpp"
 #include "Dice.hpp"
 #include <set>
+#include <sstream>
+#include <iostream>
 
 using namespace ariel;
 
 TEST_CASE("Player tests") {
+
+    // Create players
     ariel::Player player1("Alice");
     ariel::Player player2("Bob");
 
+    // check names
     CHECK(player1.getName() == "Alice");
     CHECK(player2.getName() == "Bob");
 
+    // Check points
     player1.addPoints(3);
     player2.addPoints(5);
     CHECK(player1.getPoints() == 3);
@@ -66,6 +72,7 @@ TEST_CASE("Dice tests") {
 TEST_CASE("Board initialization") {
     ariel::Board board;
 
+    // Check sizes of the vectors
     CHECK(board.getHexagons().size() == 19);
     CHECK(board.getIntersections().size() == 54);
     CHECK(board.getPathAdjacencies().size() == 72);
@@ -94,6 +101,11 @@ TEST_CASE("Catan game tests") {
     CHECK(game.playerHasCards(p1, ariel::CardType::Brick, 4));
     CHECK(game.playerHasCards(p1, ariel::CardType::Wool, 2));
     CHECK(game.playerHasCards(p1, ariel::CardType::Grain, 2));
+
+    CHECK_FALSE(game.playerHasCards(p1, ariel::CardType::Lumber, 5));
+    CHECK_FALSE(game.playerHasCards(p1, ariel::CardType::Brick, 5));
+    CHECK_FALSE(game.playerHasCards(p1, ariel::CardType::Wool, 3));
+    CHECK_FALSE(game.playerHasCards(p1, ariel::CardType::Grain, 3));
 
     CHECK(game.placeRoad(p1, 13));
     CHECK_FALSE(game.placeRoad(p1, 13)); // Road already placed

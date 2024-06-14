@@ -76,4 +76,4 @@ namespace ariel {
         void buildMenu();
     };
 
-} // namespace ariel
+}

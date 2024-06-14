@@ -29,8 +29,8 @@ Below are images showing the layout of the board and the numbering of hexagons, 
 ### Board Layout
 ![Board Layout](Images/board.png)
 
-### Board Numbers
-![Board Numbers](Images/boardNumbers.png)
+### Board Hexagon, Path and Intersection indices
+![Board Hexagon, Path, Intersection indices](Images/boardNumbers.png)
 
 ## Project Structure
 The project consists of the following files:
@@ -135,9 +135,6 @@ make catan
 The `make catan` command compiles the main game executable.
 The `./catan` command runs the compiled game executable.
 
-## Compilation and Execution
-
-Use the provided Makefile for compilation and execution.
 
 ### Targets:
 - **run**: Builds and runs the demo.

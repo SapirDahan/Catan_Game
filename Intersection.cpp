@@ -10,21 +10,6 @@
 
 using namespace ariel;
 
-// Define static member
-const std::vector<std::vector<std::pair<unsigned int, unsigned int>>> Intersection::intersectionAdjacencies = {
-        {{0, 0}}, {{0, 0}}, {{0, 0}, {0, 1}}, {{0, 1}}, {{0, 1}, {0, 2}}, {{0, 2}}, {{0, 2}}, {{1, 0}},
-        {{0, 0}, {1, 0}}, {{0, 0}, {1, 0}, {1, 1}}, {{0, 0}, {0, 1}, {1, 1}}, {{1, 2}, {0, 1}, {1, 1}},
-        {{0, 1}, {1, 2}, {0, 2}}, {{1, 3}, {1, 2}, {0, 2}}, {{0, 2}, {1, 3}}, {{1, 3}}, {{2, 0}},
-        {{1, 0}, {2, 0}}, {{1, 0}, {2, 0}, {2, 1}}, {{1, 0}, {1, 1}, {2, 1}}, {{1, 1}, {2, 1}, {2, 2}},
-        {{1, 1}, {1, 2}, {2, 2}}, {{1, 2}, {2, 2}, {2, 3}}, {{1, 2}, {1, 3}, {2, 3}}, {{1, 3}, {2, 3}, {2, 4}},
-        {{1, 3}, {2, 4}}, {{2, 4}}, {{2, 0}}, {{2, 0}, {3, 0}}, {{2, 0}, {2, 1}, {3, 0}}, {{2, 1}, {3, 0}, {3, 1}},
-        {{2, 1}, {2, 2}, {3, 1}}, {{2, 2}, {3, 1}, {3, 2}}, {{2, 2}, {2, 3}, {3, 2}}, {{2, 3}, {3, 2}, {3, 3}},
-        {{2, 3}, {2, 4}, {3, 3}}, {{2, 4}, {3, 3}}, {{2, 4}}, {{3, 0}}, {{3, 0}, {4, 0}}, {{3, 0}, {3, 1}, {4, 0}},
-        {{3, 1}, {4, 0}, {4, 1}}, {{3, 1}, {3, 2}, {4, 1}}, {{3, 2}, {4, 1}, {4, 2}}, {{3, 2}, {3, 3}, {4, 2}},
-        {{3, 3}, {4, 2}}, {{3, 3}}, {{4, 0}}, {{4, 0}}, {{4, 0}, {4, 1}}, {{4, 1}}, {{4, 1}, {4, 2}}, {{4, 2}},
-        {{4, 2}}
-};
-
 /**
  * @brief Constructs an Intersection with a specific index.
  *
@@ -52,7 +37,7 @@ Intersection::Structure Intersection::getStructure() const { return structure; }
  * @return Player* Pointer to the owner of the structure, or nullptr if there is no structure.
  */
 Player* Intersection::getOwner() const {
-    return structure != Structure::None ? owner : nullptr;
+    return owner;
 }
 
 /**
@@ -88,7 +73,9 @@ bool Intersection::setStructure(Structure newStructure, Player& player) {
             this->owner = &player;
             return true;
         }
-    } else if (newStructure == City) {
+    }
+
+    else if (newStructure == City) {
         if (structure == Settlement) {
             structure = City;
             return true;

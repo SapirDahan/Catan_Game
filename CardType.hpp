@@ -22,5 +22,4 @@ namespace ariel {
         Monopoly,       // Represents a Monopoly development card.
         LargestArmy     // Represents a Largest Army special card.
     };
-
 }
